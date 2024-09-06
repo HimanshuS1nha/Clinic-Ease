@@ -2,7 +2,7 @@ import { Button } from "../ui/button";
 
 const Navbar = () => {
   return (
-    <nav className="flex h-[8vh] items-center justify-around">
+    <nav className="flex h-[10vh] items-center justify-around">
       <p className="text-xl font-semibold">
         Clinic<span className="text-emerald-600 font-bold">Ease</span>
       </p>
