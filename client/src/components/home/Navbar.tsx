@@ -15,7 +15,7 @@ const Navbar = () => {
           About
         </li>
         <li className="font-semibold hover:text-emerald-600 delay-100 transition-all cursor-pointer">
-          Pricing
+          Services
         </li>
         <li className="font-semibold hover:text-emerald-600 delay-100 transition-all cursor-pointer">
           Contact
