@@ -1,28 +1,61 @@
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useUser } from "@/hooks/useUser";
+import {
+  loginValidator,
+  loginValidatorType,
+} from "@/validators/login-validator";
+import type { UserType } from "types";
 
 const LoginPage = () => {
+  const { setUser } = useUser();
+
   const {
     register,
     reset,
     formState: { errors },
     handleSubmit,
-    getValues,
-    setValue,
-  } = useForm({
+  } = useForm<loginValidatorType>({
     defaultValues: {
       password: "",
       email: "",
     },
+    resolver: zodResolver(loginValidator),
   });
 
   const { mutate: handleLogin, isPending } = useMutation({
     mutationKey: ["login"],
+    mutationFn: async (values: loginValidatorType) => {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/login`,
+        { ...values },
+        { withCredentials: true }
+      );
+
+      return data as { message: string; user: UserType };
+    },
+    onSuccess: (data) => {
+      toast.success(data.message);
+      setUser(data.user);
+      reset();
+
+      //! Push to dashboard according to type of user
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError && error.response?.data.error) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error("Some error occured. Please try again later!");
+      }
+    },
   });
   return (
     <section className="flex flex-col justify-center items-center w-full h-screen">
@@ -39,7 +72,10 @@ const LoginPage = () => {
             </p>
           </div>
 
-          <form className="flex flex-col gap-y-6">
+          <form
+            className="flex flex-col gap-y-6"
+            onSubmit={handleSubmit((data) => handleLogin(data))}
+          >
             <div className="flex flex-col gap-y-3">
               <Label htmlFor="email">Email</Label>
               <Input
