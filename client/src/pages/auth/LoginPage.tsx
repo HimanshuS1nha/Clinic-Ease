@@ -121,7 +121,7 @@ const LoginPage = () => {
             <p className="text-sm">
               Don&apos;t have an account?{" "}
               <Link
-                to={"/sign-up"}
+                to={"/signup"}
                 className={`font-semibold hover:text-emerald-600 delay-75 transition-all cursor-pointer ${
                   isPending ? "pointer-events-none" : ""
                 }`}
