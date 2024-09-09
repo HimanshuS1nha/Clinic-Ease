@@ -2,6 +2,10 @@ import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 
 const Navbar = () => {
+  const scrollTo = (id: string) => {
+    console.log(document.getElementById(id));
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
   return (
     <nav className="flex h-[10vh] items-center justify-around">
       <p className="text-xl font-semibold">
@@ -12,7 +16,10 @@ const Navbar = () => {
         <li className="font-semibold hover:text-emerald-600 delay-100 transition-all cursor-pointer">
           Home
         </li>
-        <li className="font-semibold hover:text-emerald-600 delay-100 transition-all cursor-pointer">
+        <li
+          className="font-semibold hover:text-emerald-600 delay-100 transition-all cursor-pointer"
+          onClick={() => scrollTo("about")}
+        >
           About
         </li>
         <li className="font-semibold hover:text-emerald-600 delay-100 transition-all cursor-pointer">

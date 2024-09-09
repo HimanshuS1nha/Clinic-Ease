@@ -1,6 +1,9 @@
 const AboutUs = () => {
   return (
-    <section className="flex justify-center items-center gap-x-8 mt-20">
+    <section
+      className="flex justify-center items-center gap-x-8 mt-20"
+      id="about"
+    >
       <div className="flex flex-col gap-y-7 w-[45%]">
         <div className="flex flex-col gap-y-1">
           <p className="text-sm text-gray-700 font-semibold">About Us</p>
