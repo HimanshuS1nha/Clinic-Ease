@@ -5,10 +5,10 @@ const Footer = () => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
   return (
-    <footer className="flex justify-around mt-20">
+    <footer className="flex justify-around mt-20 bg-emerald-600 p-4 text-white">
       <div className="flex flex-col gap-y-2 w-[30%]">
         <p className="text-xl font-semibold">
-          Clinic<span className="text-emerald-600 font-bold">Ease</span>
+          Clinic<span className="font-bold">Ease</span>
         </p>
         <p className="text-justify leading-7">
           Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit
@@ -51,11 +51,11 @@ const Footer = () => {
           <p className="text-lg font-bold">Social Networks</p>
           <div className="flex gap-x-4">
             <FaFacebookF
-              className="text-black hover:text-emerald-600 hover:scale-110 delay-100 transition-all cursor-pointer"
+              className="text-white hover:scale-125 delay-100 transition-all cursor-pointer"
               size={20}
             />
             <FaInstagram
-              className="text-black hover:text-emerald-600 hover:scale-110 delay-100 transition-all cursor-pointer"
+              className="text-white hover:scale-125 delay-100 transition-all cursor-pointer"
               size={20}
             />
           </div>
