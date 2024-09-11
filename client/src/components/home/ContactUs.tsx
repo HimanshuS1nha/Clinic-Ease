@@ -9,9 +9,9 @@ const ContactUs = () => {
   return (
     <section
       id="contact"
-      className="flex justify-center items-center gap-x-10 mt-20"
+      className="flex justify-center items-center gap-x-16 mt-20"
     >
-      <div className="flex flex-col gap-y-7 w-[45%]">
+      <div className="flex flex-col gap-y-7 w-[50%]">
         <div className="flex flex-col gap-y-1">
           <p className="text-sm text-gray-700 font-semibold">Contact Us</p>
           <p className="text-5xl text-emerald-600 font-bold">
