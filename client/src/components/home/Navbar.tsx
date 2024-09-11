@@ -3,7 +3,6 @@ import { Button } from "../ui/button";
 
 const Navbar = () => {
   const scrollTo = (id: string) => {
-    console.log(document.getElementById(id));
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
   return (
