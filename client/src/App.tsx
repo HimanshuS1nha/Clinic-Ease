@@ -4,6 +4,7 @@ import HomePage from "./pages/HomePage";
 
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignupPage";
+import PatientDashboardPage from "./pages/patient-dashboard/PatientDashboardPage";
 
 const App = () => {
   return (
@@ -13,6 +14,9 @@ const App = () => {
       {/* Auth */}
       <Route path="/login" Component={LoginPage} />
       <Route path="/signup" Component={SignupPage} />
+
+      {/* Patient Dashboard */}
+      <Route path="/dashboard/patient" Component={PatientDashboardPage} />
     </Routes>
   );
 };

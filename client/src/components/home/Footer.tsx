@@ -49,7 +49,7 @@ const Footer = () => {
       <div className="flex flex-col gap-y-8">
         <div className="flex flex-col gap-y-3">
           <p className="text-lg font-bold">Social Networks</p>
-          <div className="flex gap-x-4">
+          <div className="flex gap-x-4 items-center">
             <FaFacebookF
               className="text-white hover:scale-125 delay-100 transition-all cursor-pointer"
               size={20}
