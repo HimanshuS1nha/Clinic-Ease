@@ -25,7 +25,10 @@ const Navbar = () => {
         <li className="font-semibold hover:text-emerald-600 delay-100 transition-all cursor-pointer">
           Services
         </li>
-        <li className="font-semibold hover:text-emerald-600 delay-100 transition-all cursor-pointer">
+        <li
+          className="font-semibold hover:text-emerald-600 delay-100 transition-all cursor-pointer"
+          onClick={() => scrollTo("contact")}
+        >
           Contact
         </li>
       </ul>
