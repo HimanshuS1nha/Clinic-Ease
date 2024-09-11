@@ -4,6 +4,7 @@ import Copyright from "@/components/home/Copyright";
 import Footer from "@/components/home/Footer";
 import HeroSection from "@/components/home/HeroSection";
 import Navbar from "@/components/home/Navbar";
+import WhyUs from "@/components/home/WhyUs";
 
 const HomePage = () => {
   return (
@@ -11,6 +12,7 @@ const HomePage = () => {
       <Navbar />
       <HeroSection />
       <AboutUs />
+      <WhyUs />
       <ContactUs />
       <Footer />
       <Copyright />

@@ -21,8 +21,11 @@ const Navbar = () => {
         >
           About
         </li>
-        <li className="font-semibold hover:text-emerald-600 delay-100 transition-all cursor-pointer">
-          Services
+        <li
+          className="font-semibold hover:text-emerald-600 delay-100 transition-all cursor-pointer"
+          onClick={() => scrollTo("why-us")}
+        >
+          Why Us
         </li>
         <li
           className="font-semibold hover:text-emerald-600 delay-100 transition-all cursor-pointer"
