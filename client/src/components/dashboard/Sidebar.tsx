@@ -17,6 +17,7 @@ const Sidebar = () => {
           <Link
             to={item.url}
             className="font-semibold hover:text-emerald-600 delay-100 transition-all"
+            key={item.title}
           >
             {item.title}
           </Link>
@@ -32,7 +33,7 @@ const Sidebar = () => {
 
             <div className="flex flex-col">
               <p className="text-lg font-semibold">Random User</p>
-              <p className="text-gray-700 text-sm">User</p>
+              <p className="text-gray-700 text-sm -mt-0.5">User</p>
             </div>
           </div>
         </DropdownMenuTrigger>
