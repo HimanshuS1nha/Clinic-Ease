@@ -5,6 +5,6 @@ export const patientSidebarItems = [
   },
   {
     title: "Appointment Details",
-    url: "",
+    url: "appointment-details",
   },
 ];

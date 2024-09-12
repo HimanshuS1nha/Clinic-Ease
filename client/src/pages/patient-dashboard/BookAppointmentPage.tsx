@@ -17,7 +17,7 @@ const BookAppointmentPage = () => {
   const [date, setDate] = useState<Date>();
   return (
     <DashboardWrapper>
-      <section className="bg-white w-[95%] h-[95%] rounded-xl shadow-lg shadow-gray-300 p-6 flex flex-col gap-y-10">
+      {/* <section className="bg-white w-[95%] h-[95%] rounded-xl shadow-lg shadow-gray-300 p-6 flex flex-col gap-y-10"> */}
         <Title>Book Appointment</Title>
 
         <div className="flex flex-col gap-y-6">
@@ -40,7 +40,7 @@ const BookAppointmentPage = () => {
           </div>
         </div>
         <Button>Book</Button>
-      </section>
+      {/* </section> */}
     </DashboardWrapper>
   );
 };

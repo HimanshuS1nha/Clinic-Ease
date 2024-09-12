@@ -15,7 +15,7 @@ const Sidebar = () => {
       {patientSidebarItems.map((item) => {
         return (
           <Link
-            to={item.url}
+            to={`/dashboard/patient/${item.url}`}
             className="font-semibold hover:text-emerald-600 delay-100 transition-all"
             key={item.title}
           >
