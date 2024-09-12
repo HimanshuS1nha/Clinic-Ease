@@ -12,7 +12,10 @@ const Navbar = () => {
       </p>
 
       <ul className="flex items-center gap-x-8">
-        <li className="font-semibold hover:text-emerald-600 delay-100 transition-all cursor-pointer">
+        <li
+          className="font-semibold hover:text-emerald-600 delay-100 transition-all cursor-pointer"
+          onClick={() => scrollTo("home")}
+        >
           Home
         </li>
         <li

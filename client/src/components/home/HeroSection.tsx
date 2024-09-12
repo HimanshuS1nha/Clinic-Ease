@@ -2,7 +2,10 @@ import { Button } from "../ui/button";
 
 const HeroSection = () => {
   return (
-    <main className="flex h-[80vh] items-center justify-center gap-x-8">
+    <main
+      className="flex h-[80vh] items-center justify-center gap-x-8"
+      id="home"
+    >
       <div className="w-[50%] flex justify-center items-center">
         <div className="flex flex-col gap-y-6 pl-16">
           <div className="flex flex-col gap-y-3">
