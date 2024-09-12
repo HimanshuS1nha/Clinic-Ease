@@ -1,7 +1,7 @@
 export const patientSidebarItems = [
   {
     title: "Book Appointment",
-    url: "",
+    url: "book-appointment",
   },
   {
     title: "Appointment Details",

@@ -4,7 +4,9 @@ import HomePage from "./pages/HomePage";
 
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignupPage";
+
 import PatientDashboardPage from "./pages/patient-dashboard/PatientDashboardPage";
+import BookAppointmentPage from "./pages/patient-dashboard/BookAppointmentPage";
 
 const App = () => {
   return (
@@ -17,6 +19,10 @@ const App = () => {
 
       {/* Patient Dashboard */}
       <Route path="/dashboard/patient" Component={PatientDashboardPage} />
+      <Route
+        path="/dashboard/patient/book-appointment"
+        Component={BookAppointmentPage}
+      />
     </Routes>
   );
 };
