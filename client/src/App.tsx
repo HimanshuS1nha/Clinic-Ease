@@ -1,4 +1,8 @@
 import { Routes, Route } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+
+import { useUser } from "./hooks/useUser";
 
 import HomePage from "./pages/HomePage";
 
@@ -11,7 +15,29 @@ import AppointmentDetailsPage from "./pages/patient-dashboard/AppointmentDetails
 import TestDetailsPage from "./pages/patient-dashboard/TestDetailsPage";
 import AddPatientPage from "./pages/patient-dashboard/AddPatientPage";
 
+import type { UserType } from "types";
+import { useEffect } from "react";
+
 const App = () => {
+  const { setUser } = useUser();
+
+  const { data } = useQuery({
+    queryKey: ["is-logged-in"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/user/is-logged-in`,
+        { withCredentials: true }
+      );
+
+      return data as { user: { _doc: UserType } };
+    },
+  });
+
+  useEffect(() => {
+    if (data?.user._doc) {
+      setUser(data.user._doc);
+    }
+  }, [data]);
   return (
     <Routes>
       <Route path="/" Component={HomePage} />
