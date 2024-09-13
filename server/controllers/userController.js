@@ -86,6 +86,32 @@ export const getUser = async (req, res) => {
   }
 };
 
+export const isUserLoggedIn = async (req, res) => {
+  try {
+    const token = req.cookies["authorization"];
+    if (!token) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    const { id } = jwt.verify(token, process.env.JWT_TOKEN);
+    if (!id) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    const user = await User.findOne({ _id: id });
+    if (!user) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    const { password, ...restUser } = user;
+
+    return res.status(200).json({ user: restUser });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Some error occured." });
+  }
+};
+
 export const createAdmin = async (req, res) => {
   const { name, email, mobile, password } = req.body;
 
