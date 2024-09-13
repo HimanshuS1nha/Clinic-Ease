@@ -5,8 +5,8 @@ const Footer = () => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
   return (
-    <footer className="flex justify-around mt-20 bg-emerald-600 p-4 text-white">
-      <div className="flex flex-col gap-y-2 w-[30%]">
+    <footer className="flex flex-col lg:flex-row justify-around items-center lg:items-start mt-20 bg-emerald-600 p-4 text-white gap-y-8 lg:gap-y-0">
+      <div className="flex flex-col gap-y-2 w-[90%] lg:w-[30%]">
         <p className="text-xl font-semibold">
           Clinic<span className="font-bold">Ease</span>
         </p>
@@ -46,8 +46,8 @@ const Footer = () => {
         </ul>
       </div>
 
-      <div className="flex flex-col gap-y-8">
-        <div className="flex flex-col gap-y-3">
+      <div className="flex flex-col gap-y-8 items-center lg:items-start">
+        <div className="flex flex-col gap-y-3 items-center lg:items-start">
           <p className="text-lg font-bold">Social Networks</p>
           <div className="flex gap-x-4 items-center">
             <FaFacebookF
@@ -60,7 +60,7 @@ const Footer = () => {
             />
           </div>
         </div>
-        <div className="flex flex-col gap-y-3">
+        <div className="flex flex-col gap-y-3 items-center lg:items-start">
           <p className="text-lg font-bold">Contact Details</p>
           <div className="flex gap-x-3 items-center">
             <p className="font-semibold">Address : </p>
