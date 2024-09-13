@@ -64,7 +64,7 @@ const Navbar = () => {
           </DrawerTrigger>
           <DrawerTitle className="hidden">Navbar</DrawerTitle>
           <DrawerContent>
-            <div className="flex flex-col items-center gap-y-5 pt-5">
+            <div className="flex flex-col items-center gap-y-5 py-5">
               <DrawerClose asChild>
                 <p
                   className="font-semibold hover:text-emerald-600 delay-100 transition-all cursor-pointer"
@@ -81,18 +81,22 @@ const Navbar = () => {
                   About
                 </p>
               </DrawerClose>
-              <p
-                className="font-semibold hover:text-emerald-600 delay-100 transition-all cursor-pointer"
-                onClick={() => scrollTo("why-us")}
-              >
-                Why Us
-              </p>
-              <p
-                className="font-semibold hover:text-emerald-600 delay-100 transition-all cursor-pointer"
-                onClick={() => scrollTo("contact")}
-              >
-                Contact
-              </p>
+              <DrawerClose>
+                <p
+                  className="font-semibold hover:text-emerald-600 delay-100 transition-all cursor-pointer"
+                  onClick={() => scrollTo("why-us")}
+                >
+                  Why Us
+                </p>
+              </DrawerClose>
+              <DrawerClose>
+                <p
+                  className="font-semibold hover:text-emerald-600 delay-100 transition-all cursor-pointer"
+                  onClick={() => scrollTo("contact")}
+                >
+                  Contact
+                </p>
+              </DrawerClose>
             </div>
           </DrawerContent>
         </Drawer>
