@@ -12,10 +12,10 @@ const WhyUs = () => {
         </p>
       </div>
 
-      <div className="flex flex-wrap justify-between w-[1200px] items-center gap-y-10">
+      <div className="flex flex-wrap justify-center lg:justify-between w-[90%] lg:w-[75%] xl:w-[1200px] items-center gap-y-10">
         {whyUs.map((item) => {
           return (
-            <div key={item.title} className="flex flex-col gap-y-5 w-[350px]">
+            <div key={item.title} className="flex flex-col gap-y-5 w-full sm:w-[350px]">
               <div className="flex flex-col gap-y-3">
                 <item.Icon size={40} color={item.color} />
                 <p className="text-2xl font-bold">{item.title}</p>
