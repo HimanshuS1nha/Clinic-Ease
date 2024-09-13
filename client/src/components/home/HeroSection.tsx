@@ -3,11 +3,11 @@ import { Button } from "../ui/button";
 const HeroSection = () => {
   return (
     <main
-      className="flex h-[80vh] items-center justify-center gap-x-8"
+      className="flex flex-col lg:flex-row lg:h-[80vh] items-center justify-center gap-y-8 lg:gap-x-8 mt-12 lg:mt-0"
       id="home"
     >
-      <div className="w-[50%] flex justify-center items-center">
-        <div className="flex flex-col gap-y-6 pl-16">
+      <div className="w-[90%] md:w-[75%] lg:w-[50%] flex justify-center items-center">
+        <div className="flex flex-col gap-y-6 lg:pl-16">
           <div className="flex flex-col gap-y-3">
             <div className="bg-gray-100 border border-gray-200 rounded-full px-4 py-2 shadow-sm shadow-gray-300 w-fit">
               <p className="text-xs font-semibold">ClinicEase is now public</p>
@@ -31,7 +31,7 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
-      <div className="w-[50%] h-full flex justify-center items-center">
+      <div className="w-[90%] md:w-[75%] lg:w-[50%] h-full flex justify-center items-center">
         <div className="bg-emerald-600 w-[50%] h-[90%] flex justify-center items-center rounded-3xl shadow-lg shadow-gray-400">
           <img
             src="https://www.transparentpng.com/thumb/doctor/pen-in-hand-male-doctor-free-transparent-bWzUD9.png"
