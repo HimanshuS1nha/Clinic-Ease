@@ -9,7 +9,7 @@ const AboutUs = () => {
           <p className="text-sm text-gray-700 font-semibold">About Us</p>
           <p className="text-5xl text-emerald-600 font-bold">Our Journey</p>
         </div>
-        <p className="text-justify leading-7 w-[80%]">
+        <p className="text-justify leading-7 w-full md:w-[80%]">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate
           accusantium illum similique, quaerat facilis distinctio explicabo
           perspiciatis! Labore enim laboriosam quisquam quo quaerat molestiae
@@ -44,7 +44,7 @@ const AboutUs = () => {
       <img
         src="https://img.freepik.com/free-photo/confident-doctor-standing-hospital-room-with-patient-bed_9975-22166.jpg?semt=ais_hybrid"
         alt="Hospital"
-        className="w-[90%] md:w-[75%] xl:w-[600px] h-[500px] rounded-xl"
+        className="w-[90%] md:w-[75%] xl:w-[600px] md:h-[500px] rounded-xl"
       />
     </section>
   );
