@@ -27,6 +27,7 @@ const LoginPage = () => {
     defaultValues: {
       password: "",
       email: "",
+      phoneNumber: "",
     },
     resolver: zodResolver(loginValidator),
   });
@@ -87,6 +88,21 @@ const LoginPage = () => {
               />
               {errors.email && (
                 <p className="text-rose-500 text-sm">{errors.email.message}</p>
+              )}
+            </div>
+            <div className="flex flex-col gap-y-3">
+              <Label htmlFor="phoneNumber">Phone Number</Label>
+              <Input
+                placeholder="Enter your phone number"
+                type="number"
+                id="phoneNumber"
+                required
+                {...register("phoneNumber", { required: true })}
+              />
+              {errors.phoneNumber && (
+                <p className="text-rose-500 text-sm">
+                  {errors.phoneNumber.message}
+                </p>
               )}
             </div>
             <div className="flex flex-col gap-y-3">

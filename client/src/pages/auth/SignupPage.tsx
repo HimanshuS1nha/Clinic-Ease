@@ -22,6 +22,7 @@ const SignupPage = () => {
     defaultValues: {
       name: "",
       email: "",
+      phoneNumber: "",
       password: "",
       confirmPassword: "",
     },
@@ -59,7 +60,7 @@ const SignupPage = () => {
   });
   return (
     <section className="flex flex-col justify-center items-center w-full h-screen">
-      <div className="bg-white w-[90%] sm:w-[50%] md:w-[40%] lg:w-[30%] py-7 rounded-xl flex flex-col justify-center items-center gap-y-7 shadow shadow-gray-500">
+      <div className="bg-white w-[90%] sm:w-[50%] md:w-[40%] lg:w-[30%] py-7 rounded-xl flex flex-col justify-center items-center gap-y-7 shadow shadow-gray-500 h-[80vh] overflow-y-auto">
         <p className="text-2xl font-bold">
           Clinic<span className="text-emerald-600">Ease</span>
         </p>
@@ -101,6 +102,21 @@ const SignupPage = () => {
               />
               {errors.email && (
                 <p className="text-rose-500 text-sm">{errors.email.message}</p>
+              )}
+            </div>
+            <div className="flex flex-col gap-y-3">
+              <Label htmlFor="phoneNumber">Phone Number</Label>
+              <Input
+                placeholder="Enter your phone number"
+                type="number"
+                id="phoneNumber"
+                required
+                {...register("phoneNumber", { required: true })}
+              />
+              {errors.phoneNumber && (
+                <p className="text-rose-500 text-sm">
+                  {errors.phoneNumber.message}
+                </p>
               )}
             </div>
             <div className="flex flex-col gap-y-3">
