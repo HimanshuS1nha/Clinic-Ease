@@ -9,6 +9,7 @@ import PatientDashboardPage from "./pages/patient-dashboard/PatientDashboardPage
 import BookAppointmentPage from "./pages/patient-dashboard/BookAppointmentPage";
 import AppointmentDetailsPage from "./pages/patient-dashboard/AppointmentDetailsPage";
 import TestDetailsPage from "./pages/patient-dashboard/TestDetailsPage";
+import AddPatientPage from "./pages/patient-dashboard/AddPatientPage";
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
 
       {/* Patient Dashboard */}
       <Route path="/dashboard/patient" Component={PatientDashboardPage} />
+      <Route path="/dashboard/patient/add-patient" Component={AddPatientPage} />
       <Route
         path="/dashboard/patient/book-appointment"
         Component={BookAppointmentPage}

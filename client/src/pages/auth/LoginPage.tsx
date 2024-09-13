@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
@@ -17,6 +17,7 @@ import type { UserType } from "types";
 
 const LoginPage = () => {
   const { setUser } = useUser();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -36,19 +37,29 @@ const LoginPage = () => {
     mutationKey: ["login"],
     mutationFn: async (values: loginValidatorType) => {
       const { data } = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/login`,
-        { ...values },
-        { withCredentials: true }
+        `${import.meta.env.VITE_API_URL}/user/login`,
+        {
+          email: values.email,
+          mobile: values.phoneNumber,
+          password: values.password,
+        },
+        {
+          withCredentials: true,
+        }
       );
 
-      return data as { message: string; user: UserType };
+      return data as { message: string; user: { _doc: UserType } };
     },
     onSuccess: (data) => {
       toast.success(data.message);
-      setUser(data.user);
+      setUser({ ...data.user._doc });
       reset();
 
-      //! Push to dashboard according to type of user
+      if (data.user._doc.role === "admin") {
+        navigate("/dashboard/admin");
+      } else {
+        navigate("/dashboard/patient");
+      }
     },
     onError: (error) => {
       if (error instanceof AxiosError && error.response?.data.error) {
@@ -119,14 +130,6 @@ const LoginPage = () => {
                   {errors.password.message}
                 </p>
               )}
-            </div>
-            <div className="flex justify-between">
-              <Link
-                to={"/forgot-password"}
-                className="text-emerald-600 hover:text-emerald-800 text-sm font-semibold"
-              >
-                Forgot Password?
-              </Link>
             </div>
             <Button type="submit" disabled={isPending}>
               {isPending ? "Please wait..." : "Login"}

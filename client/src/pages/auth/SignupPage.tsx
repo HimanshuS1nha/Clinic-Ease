@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,16 +12,16 @@ import {
   signupValidator,
   signupValidatorType,
 } from "@/validators/signup-validator";
-import toast from "react-hot-toast";
 
 const SignupPage = () => {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: "",
       email: "",
       phoneNumber: "",
       password: "",
@@ -37,9 +38,11 @@ const SignupPage = () => {
       }
 
       const { data } = await axios.post(
-        `${process.env.VITE_API_URL}/api/signup`,
+        `${import.meta.env.VITE_API_URL}/user/register`,
         {
-          ...values,
+          email: values.email,
+          mobile: values.phoneNumber,
+          password: values.password,
         }
       );
 
@@ -48,7 +51,7 @@ const SignupPage = () => {
     onSuccess: (data) => {
       toast.success(data.message);
 
-      //! Push to login
+      navigate("/login", { replace: true });
     },
     onError: (error) => {
       if (error instanceof AxiosError && error.response?.data.error) {
@@ -60,7 +63,7 @@ const SignupPage = () => {
   });
   return (
     <section className="flex flex-col justify-center items-center w-full h-screen">
-      <div className="bg-white w-[90%] sm:w-[50%] md:w-[40%] lg:w-[30%] py-7 rounded-xl flex flex-col justify-center items-center gap-y-7 shadow shadow-gray-500 h-[80vh] overflow-y-auto">
+      <div className="bg-white w-[90%] sm:w-[50%] md:w-[40%] lg:w-[30%] py-7 rounded-xl flex flex-col justify-center items-center gap-y-7 shadow shadow-gray-500 overflow-y-auto">
         <p className="text-2xl font-bold">
           Clinic<span className="text-emerald-600">Ease</span>
         </p>
@@ -78,19 +81,6 @@ const SignupPage = () => {
             className="flex flex-col gap-y-6"
             onSubmit={handleSubmit((data) => handleSignup(data))}
           >
-            <div className="flex flex-col gap-y-3">
-              <Label htmlFor="name">Name</Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="Enter your name"
-                required
-                {...register("name", { required: true })}
-              />
-              {errors.name && (
-                <p className="text-rose-500 text-sm">{errors.name.message}</p>
-              )}
-            </div>
             <div className="flex flex-col gap-y-3">
               <Label htmlFor="email">Email</Label>
               <Input

@@ -1,5 +1,6 @@
 export type UserType = {
-  name: string;
+  _id: string;
   email: string;
-  type: "patient" | "admin";
+  mobile: string;
+  role: "patient" | "admin";
 };
