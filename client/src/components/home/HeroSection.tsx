@@ -32,7 +32,7 @@ const HeroSection = () => {
         </div>
       </div>
       <div className="w-[90%] md:w-[75%] lg:w-[50%] h-full flex justify-center items-center">
-        <div className="bg-emerald-600 w-[50%] h-[90%] flex justify-center items-center rounded-3xl shadow-lg shadow-gray-400">
+        <div className="bg-emerald-600 md:w-[75%] lg:w-[50%] h-[90%] flex justify-center items-center rounded-3xl shadow-lg shadow-gray-400">
           <img
             src="https://www.transparentpng.com/thumb/doctor/pen-in-hand-male-doctor-free-transparent-bWzUD9.png"
             alt="Doctor"
