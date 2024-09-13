@@ -8,6 +8,7 @@ import SignupPage from "./pages/auth/SignupPage";
 import PatientDashboardPage from "./pages/patient-dashboard/PatientDashboardPage";
 import BookAppointmentPage from "./pages/patient-dashboard/BookAppointmentPage";
 import AppointmentDetailsPage from "./pages/patient-dashboard/AppointmentDetailsPage";
+import TestDetailsPage from "./pages/patient-dashboard/TestDetailsPage";
 
 const App = () => {
   return (
@@ -27,6 +28,10 @@ const App = () => {
       <Route
         path="/dashboard/patient/appointment-details"
         Component={AppointmentDetailsPage}
+      />
+      <Route
+        path="/dashboard/patient/test-details"
+        Component={TestDetailsPage}
       />
     </Routes>
   );

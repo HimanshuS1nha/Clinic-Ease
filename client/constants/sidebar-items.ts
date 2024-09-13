@@ -7,4 +7,8 @@ export const patientSidebarItems = [
     title: "Appointment Details",
     url: "appointment-details",
   },
+  {
+    title: "Test Details",
+    url: "test-details",
+  },
 ];
