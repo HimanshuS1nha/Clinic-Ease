@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 const HeroSection = () => {
   return (
     <main
-      className="flex flex-col lg:flex-row lg:h-[80vh] items-center justify-center gap-y-8 lg:gap-x-8 mt-12 lg:mt-0"
+      className="flex flex-col lg:flex-row lg:h-[80vh] items-center justify-center gap-y-8 lg:gap-y-0 gap-x-0 lg:gap-x-8 mt-12 lg:mt-0"
       id="home"
     >
       <div className="w-[90%] md:w-[75%] lg:w-[50%] flex justify-center items-center">
