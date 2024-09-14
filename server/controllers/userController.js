@@ -95,12 +95,12 @@ export const isUserLoggedIn = async (req, res) => {
 
     const { id } = jwt.verify(token, process.env.JWT_TOKEN);
     if (!id) {
-      return res.status(403).json({ error: "Unauthorized" });
+      return res.status(401).json({ error: "Unauthorized" });
     }
 
     const user = await User.findOne({ _id: id });
     if (!user) {
-      return res.status(403).json({ error: "Unauthorized" });
+      return res.status(401).json({ error: "Unauthorized" });
     }
 
     const { password, ...restUser } = user;
