@@ -36,10 +36,10 @@ export const createUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
-  const { email, mobile, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ $or: [{ email }, { mobile }] });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -107,7 +107,7 @@ export const isUserLoggedIn = async (req, res) => {
 
     return res.status(200).json({ user: restUser });
   } catch (error) {
-    res.status(500).json({ error: "Some error occured." });
+    res.status(500).json({ message: "Some error occured." });
   }
 };
 
@@ -131,5 +131,21 @@ export const createAdmin = async (req, res) => {
       .json({ message: "Admin created successfully", admin: newAdmin });
   } catch (error) {
     res.status(400).json({ message: "Error creating admin", error });
+  }
+};
+
+export const logoutUser = async (req, res) => {
+  try {
+    res.cookie("authorization", "", {
+      path: "/",
+      maxAge: 0,
+      secure: true,
+      httpOnly: true,
+      sameSite: "None",
+    });
+
+    return res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    res.status(400).json({ message: "Error loggin out" });
   }
 };

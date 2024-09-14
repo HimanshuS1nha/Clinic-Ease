@@ -1,6 +1,7 @@
 import Appointment from "../models/appointmentModel.js";
 import Patient from "../models/patientDetailsModel.js";
 import Doctor from "../models/doctorModel.js";
+import User from "../models/userModel.js";
 
 export const bookAppointment = async (req, res) => {
   try {
@@ -37,6 +38,44 @@ export const bookAppointment = async (req, res) => {
     res.status(201).json({ message: "Appointment booked" });
   } catch (error) {
     console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const getAppointments = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const user = await User.findOne({ _id: userId });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const patients = await Patient.find({ userId });
+
+    let appointments = [];
+
+    for await (const patient of patients) {
+      const dbAppointments = await Appointment.find({
+        user: patient._id,
+      });
+
+      if (dbAppointments) {
+        const doctor = await Doctor.findOne({ _id: dbAppointments.doctor });
+        dbAppointments.map((item) => {
+          appointments.push({
+            id: item._id,
+            date: item.date,
+            patientName: patient.name,
+            doctorName: doctor.name,
+          });
+        });
+      }
+    }
+
+    return res.status(200).json(appointments);
+  } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Server error" });
   }
 };
