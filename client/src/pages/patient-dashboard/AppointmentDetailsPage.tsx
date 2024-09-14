@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Loader2 } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
+import toast from "react-hot-toast";
 
 import DashboardWrapper from "@/components/dashboard/DashboardWrapper";
 import Title from "@/components/dashboard/Title";
@@ -30,7 +31,7 @@ const AppointmentDetailsPage = () => {
     },
   ];
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["get-appointments"],
     queryFn: async () => {
       const { data } = await axios.get(
@@ -41,6 +42,13 @@ const AppointmentDetailsPage = () => {
       return data as AppointmentDetails[];
     },
   });
+  if (error) {
+    if (error instanceof AxiosError && error.response?.data.error) {
+      toast.error(error.response.data.error);
+    } else {
+      toast.error("Some error occured. Please try again later!");
+    }
+  }
   return (
     <DashboardWrapper className="">
       <Title>Appointment Details</Title>
