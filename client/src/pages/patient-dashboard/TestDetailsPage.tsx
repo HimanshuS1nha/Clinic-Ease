@@ -2,6 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { useQuery } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
 
 import DashboardWrapper from "@/components/dashboard/DashboardWrapper";
 import Title from "@/components/dashboard/Title";
@@ -40,21 +41,35 @@ const TestDetailsPage = () => {
     },
   ];
 
-  const data: TestDetails[] = [
-    {
-      id: "1",
-      testName: "Covid Test",
-      testDate: "Sept 13, 2024",
-      labName: "Abc Labs",
-      status: "Completed",
-      result: "Negative",
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["get-tests"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/tests`,
+        { withCredentials: true }
+      );
+
+      return data as TestDetails[];
     },
-  ];
+  });
+  if (error) {
+    if (error instanceof AxiosError && error.response?.data.error) {
+      toast.error(error.response.data.error);
+    } else {
+      toast.error("Some error occured. Please try again later!");
+    }
+  }
   return (
     <DashboardWrapper>
       <Title>Test Details</Title>
 
-      <DataTable columns={columns} data={data} />
+      {isLoading && (
+        <div className="flex w-full h-full items-center justify-center">
+          <Loader2 size={50} className="animate-spin" color="green" />
+        </div>
+      )}
+
+      {data && <DataTable columns={columns} data={data} />}
     </DashboardWrapper>
   );
 };
