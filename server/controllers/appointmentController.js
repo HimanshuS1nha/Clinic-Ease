@@ -60,16 +60,16 @@ export const getAppointments = async (req, res) => {
         user: patient._id,
       });
 
-      if (dbAppointments) {
-        const doctor = await Doctor.findOne({ _id: dbAppointments.doctor });
-        dbAppointments.map((item) => {
+      if (dbAppointments.length !== 0) {
+        for await (const appointment of dbAppointments) {
+          const doctor = await Doctor.findOne({ _id: appointment.doctor });
           appointments.push({
             id: item._id,
             date: item.date,
             patientName: patient.name,
             doctorName: doctor.name,
           });
-        });
+        }
       }
     }
 
