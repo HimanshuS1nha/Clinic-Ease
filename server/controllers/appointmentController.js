@@ -64,8 +64,8 @@ export const getAppointments = async (req, res) => {
         for await (const appointment of dbAppointments) {
           const doctor = await Doctor.findOne({ _id: appointment.doctor });
           appointments.push({
-            id: item._id,
-            date: item.date,
+            id: appointment._id,
+            date: appointment.date,
             patientName: patient.name,
             doctorName: doctor.name,
           });

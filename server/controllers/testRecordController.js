@@ -1,6 +1,7 @@
 import MedicalTest from "../models/testRecordModel.js";
 import User from "../models/userModel.js";
 import Doctor from "../models/doctorModel.js";
+import Patient from "../models/patientDetailsModel.js";
 import { ocrImageWithTesseract } from "../utils/imageOCRUtility.js";
 import { uploadImageToFirebase } from "../utils/firebaseUtility.js";
 import { generate } from "../utils/geminiUtility.js";
@@ -46,10 +47,14 @@ export const getMedicalTestsByUserId = async (req, res) => {
         for await (const test of dbTests) {
           const doctor = await Doctor.findOne({ _id: test.doctor });
           tests.push({
-            id: item._id,
-            date: item.date,
+            id: test._id,
+            testName: test.testName,
+            testDate: test.testDate,
             patientName: patient.name,
             doctorName: doctor.name,
+            labName: test.labName,
+            status: test.status,
+            result: test.result,
           });
         }
       }
@@ -57,7 +62,8 @@ export const getMedicalTestsByUserId = async (req, res) => {
 
     return res.status(200).json(tests);
   } catch (error) {
-    res.status(400).json({ error: err.message });
+    console.log(error);
+    res.status(400).json({ error: error.message });
   }
 };
 
