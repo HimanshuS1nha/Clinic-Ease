@@ -61,9 +61,9 @@ const BookAppointmentPage = () => {
   if (patientsError) {
     if (
       patientsError instanceof AxiosError &&
-      patientsError.response?.data.error
+      patientsError.response?.data.message
     ) {
-      toast.error(patientsError.response.data.error);
+      toast.error(patientsError.response.data.message);
     } else {
       toast.error("Some error occured. Please try again later!");
     }
@@ -88,9 +88,9 @@ const BookAppointmentPage = () => {
   if (doctorsError) {
     if (
       doctorsError instanceof AxiosError &&
-      doctorsError.response?.data.error
+      doctorsError.response?.data.message
     ) {
-      toast.error(doctorsError.response.data.error);
+      toast.error(doctorsError.response.data.message);
     } else {
       toast.error("Some error occured. Please try again later!");
     }
@@ -111,8 +111,8 @@ const BookAppointmentPage = () => {
       reset();
     },
     onError: (error) => {
-      if (error instanceof AxiosError && error.response?.data.error) {
-        toast.error(error.response.data.error);
+      if (error instanceof AxiosError && error.response?.data.message) {
+        toast.error(error.response.data.message);
       } else {
         toast.error("Some error occured. Please try again later!");
       }

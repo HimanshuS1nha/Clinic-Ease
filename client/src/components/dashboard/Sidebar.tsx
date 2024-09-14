@@ -1,4 +1,8 @@
-import { Link } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
+
 import { patientSidebarItems } from "../../../constants/sidebar-items";
 import {
   DropdownMenu,
@@ -11,7 +15,32 @@ import {
 import { useUser } from "@/hooks/useUser";
 
 const Sidebar = () => {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
+  const navigate = useNavigate();
+
+  const { mutate: handleLogout } = useMutation({
+    mutationKey: ["logout"],
+    mutationFn: async () => {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/user/logout`,
+        { withCredentials: true }
+      );
+
+      return data as { message: string };
+    },
+    onSuccess: (data) => {
+      toast.success(data.message);
+      setUser(null);
+      navigate("/login", { replace: true });
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError && error.response?.data.error) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error("Some error occured. Please try again later!");
+      }
+    },
+  });
   return (
     <div className="w-[280px] px-8 pt-5 flex flex-col gap-y-6">
       {patientSidebarItems.map((item) => {
@@ -46,7 +75,10 @@ const Sidebar = () => {
         <DropdownMenuContent className="w-40">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="focus:bg-rose-600 focus:text-white cursor-pointer">
+          <DropdownMenuItem
+            className="focus:bg-rose-600 focus:text-white cursor-pointer"
+            onClick={() => handleLogout()}
+          >
             Logout
           </DropdownMenuItem>
         </DropdownMenuContent>

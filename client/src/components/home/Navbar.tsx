@@ -1,5 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MdMenu } from "react-icons/md";
+import { useMutation } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import toast from "react-hot-toast";
 
 import { Button } from "../ui/button";
 import {
@@ -21,7 +24,32 @@ import {
 import { useUser } from "@/hooks/useUser";
 
 const Navbar = () => {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
+  const navigate = useNavigate();
+
+  const { mutate: handleLogout } = useMutation({
+    mutationKey: ["logout"],
+    mutationFn: async () => {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/user/logout`,
+        { withCredentials: true }
+      );
+
+      return data as { message: string };
+    },
+    onSuccess: (data) => {
+      toast.success(data.message);
+      setUser(null);
+      navigate("/login", { replace: true });
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError && error.response?.data.error) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error("Some error occured. Please try again later!");
+      }
+    },
+  });
 
   const scrollTo = (id: string) => {
     setTimeout(
@@ -81,7 +109,10 @@ const Navbar = () => {
               >
                 <Link to={`/dashboard/${user.role}`}>Dashboard</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="focus:bg-rose-600 focus:text-white cursor-pointer">
+              <DropdownMenuItem
+                className="focus:bg-rose-600 focus:text-white cursor-pointer"
+                onClick={() => handleLogout()}
+              >
                 Logout
               </DropdownMenuItem>
             </DropdownMenuContent>

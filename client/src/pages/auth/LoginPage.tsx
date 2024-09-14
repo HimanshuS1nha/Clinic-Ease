@@ -28,7 +28,6 @@ const LoginPage = () => {
     defaultValues: {
       password: "",
       email: "",
-      phoneNumber: "",
     },
     resolver: zodResolver(loginValidator),
   });
@@ -40,7 +39,6 @@ const LoginPage = () => {
         `${import.meta.env.VITE_API_URL}/user/login`,
         {
           email: values.email,
-          mobile: values.phoneNumber,
           password: values.password,
         },
         {
@@ -62,8 +60,8 @@ const LoginPage = () => {
       }
     },
     onError: (error) => {
-      if (error instanceof AxiosError && error.response?.data.error) {
-        toast.error(error.response.data.error);
+      if (error instanceof AxiosError && error.response?.data.message) {
+        toast.error(error.response.data.message);
       } else {
         toast.error("Some error occured. Please try again later!");
       }
@@ -99,21 +97,6 @@ const LoginPage = () => {
               />
               {errors.email && (
                 <p className="text-rose-500 text-sm">{errors.email.message}</p>
-              )}
-            </div>
-            <div className="flex flex-col gap-y-3">
-              <Label htmlFor="phoneNumber">Phone Number</Label>
-              <Input
-                placeholder="Enter your phone number"
-                type="number"
-                id="phoneNumber"
-                required
-                {...register("phoneNumber", { required: true })}
-              />
-              {errors.phoneNumber && (
-                <p className="text-rose-500 text-sm">
-                  {errors.phoneNumber.message}
-                </p>
               )}
             </div>
             <div className="flex flex-col gap-y-3">
