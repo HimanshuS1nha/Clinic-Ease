@@ -1,4 +1,9 @@
-import { useState } from "react";
+// import { useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import toast from "react-hot-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 import DashboardWrapper from "@/components/dashboard/DashboardWrapper";
 import Title from "@/components/dashboard/Title";
@@ -12,46 +17,183 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import {
+  bookAppointmentValidator,
+  bookAppointmentValidatorType,
+} from "@/validators/book=appointment-validator";
+import { Loader2 } from "lucide-react";
 
 const BookAppointmentPage = () => {
-  const [date, setDate] = useState<Date>();
+  // const [date, setDate] = useState<Date>();
+
+  const {
+    handleSubmit,
+    formState: { errors },
+    reset,
+    getValues,
+    setValue,
+  } = useForm<bookAppointmentValidatorType>({
+    defaultValues: {
+      doctorId: "",
+      patientId: "",
+      date: new Date(),
+    },
+    resolver: zodResolver(bookAppointmentValidator),
+  });
+
+  const {
+    data: patientsData,
+    isLoading: patientsLoading,
+    error: patientsError,
+  } = useQuery({
+    queryKey: ["get-patients"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/patients`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      return data as { name: string; _id: string }[];
+    },
+  });
+  if (patientsError) {
+    if (
+      patientsError instanceof AxiosError &&
+      patientsError.response?.data.error
+    ) {
+      toast.error(patientsError.response.data.error);
+    } else {
+      toast.error("Some error occured. Please try again later!");
+    }
+  }
+
+  const {
+    data: doctorsData,
+    isLoading: doctorsLoading,
+    error: doctorsError,
+  } = useQuery({
+    queryKey: ["get-doctors"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/doctors`,
+        {
+          withCredentials: true,
+        }
+      );
+      return data as { name: string; _id: string }[];
+    },
+  });
+  if (doctorsError) {
+    if (
+      doctorsError instanceof AxiosError &&
+      doctorsError.response?.data.error
+    ) {
+      toast.error(doctorsError.response.data.error);
+    } else {
+      toast.error("Some error occured. Please try again later!");
+    }
+  }
+
+  const { mutate: handleBookAppointment, isPending } = useMutation({
+    mutationKey: ["book-appointment"],
+    mutationFn: async (values: bookAppointmentValidatorType) => {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL}/appointments/create`,
+        { ...values }
+      );
+
+      return data as { message: string };
+    },
+    onSuccess: (data) => {
+      toast.success(data.message);
+      reset();
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError && error.response?.data.error) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error("Some error occured. Please try again later!");
+      }
+    },
+  });
   return (
     <DashboardWrapper>
       <Title>Book Appointment</Title>
 
-      <div className="flex flex-col gap-y-6">
-        <div className="flex flex-col gap-y-3">
-          <Label className="ml-1.5">Patient</Label>
-          <Select>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a patient" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="abc">ABC</SelectItem>
-              <SelectItem value="def">DEF</SelectItem>
-              <SelectItem value="ghi">GHI</SelectItem>
-            </SelectContent>
-          </Select>
+      {doctorsLoading || patientsLoading ? (
+        <div className="flex w-full h-full items-center justify-center">
+          <Loader2 size={50} className="animate-spin" color="green" />
         </div>
-        <div className="flex flex-col gap-y-3">
-          <Label className="ml-1.5">Doctor</Label>
-          <Select>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a doctor" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="abc">ABC</SelectItem>
-              <SelectItem value="def">DEF</SelectItem>
-              <SelectItem value="ghi">GHI</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="flex flex-col gap-y-3">
-          <Label className="ml-1.5">Date</Label>
-          <DatePicker date={date} setDate={setDate} />
-        </div>
-      </div>
-      <Button>Book</Button>
+      ) : (
+        <form
+          className="flex flex-col gap-y-6"
+          onSubmit={handleSubmit((data) => handleBookAppointment(data))}
+        >
+          <div className="flex flex-col gap-y-3">
+            <Label className="ml-1.5">Patient</Label>
+            <Select
+              defaultValue={getValues("patientId")}
+              onValueChange={(value) => setValue("patientId", value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a patient" />
+              </SelectTrigger>
+              <SelectContent>
+                {patientsData?.map((item) => {
+                  return (
+                    <SelectItem value={item._id} key={item._id}>
+                      {item.name}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+            {errors.patientId && (
+              <p className="text-rose-500 text-sm">
+                {errors.patientId.message}
+              </p>
+            )}
+          </div>
+          <div className="flex flex-col gap-y-3">
+            <Label className="ml-1.5">Doctor</Label>
+            <Select
+              defaultValue={getValues("doctorId")}
+              onValueChange={(value) => setValue("doctorId", value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a doctor" />
+              </SelectTrigger>
+              <SelectContent>
+                {doctorsData?.map((item) => {
+                  return (
+                    <SelectItem value={item._id} key={item._id}>
+                      {item.name}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+            {errors.doctorId && (
+              <p className="text-rose-500 text-sm">{errors.doctorId.message}</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-y-3">
+            <Label className="ml-1.5">Date</Label>
+            <DatePicker
+              date={getValues("date")}
+              setDate={(date) => setValue("date", date as Date)}
+            />
+            {errors.date && (
+              <p className="text-rose-500 text-sm">{errors.date.message}</p>
+            )}
+          </div>
+          <Button type="submit" disabled={isPending}>
+            {isPending ? "Please wait..." : "Book"}
+          </Button>
+        </form>
+      )}
     </DashboardWrapper>
   );
 };
