@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 
 const HeroSection = () => {
@@ -27,7 +28,9 @@ const HeroSection = () => {
           </p>
 
           <div className="w-full">
-            <Button>Get Started</Button>
+            <Button asChild>
+              <Link to={"/signup"}>Get Started</Link>
+            </Button>
           </div>
         </div>
       </div>
