@@ -54,7 +54,7 @@ export const loginDoctor = async (req, res) => {
 };
 export const getDoctors = async (req, res) => {
     try {
-        const doctors = await Doctor.find().select('name email doctorType');
+        const doctors = await Doctor.find().select('id name email doctorType');
         res.status(200).json(doctors);
     } catch (error) {
         console.error(error);
