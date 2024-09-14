@@ -45,7 +45,7 @@ const TestDetailsPage = () => {
     queryKey: ["get-tests"],
     queryFn: async () => {
       const { data } = await axios.get(
-        `${import.meta.env.VITE_API_URL}/tests`,
+        `${import.meta.env.VITE_API_URL}/testrecords`,
         { withCredentials: true }
       );
 
