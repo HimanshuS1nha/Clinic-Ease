@@ -10,6 +10,7 @@ import { DataTable } from "@/components/dashboard/DataTable";
 
 type TestDetails = {
   id: string;
+  patientName: string;
   testName: string;
   testDate: String;
   result: string;
@@ -19,6 +20,10 @@ type TestDetails = {
 
 const TestDetailsPage = () => {
   const columns: ColumnDef<TestDetails>[] = [
+    {
+      accessorKey: "patientName",
+      header: "Patient Name",
+    },
     {
       accessorKey: "testName",
       header: "Test Name",
