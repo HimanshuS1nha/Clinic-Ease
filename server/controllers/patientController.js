@@ -15,7 +15,7 @@ export const createPatient = async (req, res) => {
     });
 
     await newPatient.save();
-    res.status(201).json(newPatient);
+    res.status(201).json({ message: "Patient added successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error creating patient", error });
   }
