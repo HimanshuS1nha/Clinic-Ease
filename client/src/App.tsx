@@ -1,8 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-
-import { useUser } from "./hooks/useUser";
+import { useEffect } from "react";
 
 import HomePage from "./pages/HomePage";
 
@@ -16,10 +15,11 @@ import TestDetailsPage from "./pages/patient-dashboard/TestDetailsPage";
 import AddPatientPage from "./pages/patient-dashboard/AddPatientPage";
 
 import AddAdminPage from "./pages/admin-dashboard/AddAdminPage";
-
-import type { UserType } from "types";
-import { useEffect } from "react";
 import AddDoctorPage from "./pages/admin-dashboard/AddDoctorPage";
+import DoctorDetailsPage from "./pages/admin-dashboard/DoctorDetailsPage";
+
+import { useUser } from "./hooks/useUser";
+import type { UserType } from "types";
 
 const App = () => {
   const { setUser } = useUser();
@@ -68,6 +68,7 @@ const App = () => {
       {/* Admin Dashboard */}
       <Route path="/dashboard/admin/add-admin" Component={AddAdminPage} />
       <Route path="/dashboard/admin/add-doctor" Component={AddDoctorPage} />
+      <Route path="/dashboard/admin/doctor-details" Component={DoctorDetailsPage} />
     </Routes>
   );
 };
