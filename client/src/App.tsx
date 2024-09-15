@@ -19,6 +19,7 @@ import AddAdminPage from "./pages/admin-dashboard/AddAdminPage";
 
 import type { UserType } from "types";
 import { useEffect } from "react";
+import AddDoctorPage from "./pages/admin-dashboard/AddDoctorPage";
 
 const App = () => {
   const { setUser } = useUser();
@@ -66,6 +67,7 @@ const App = () => {
 
       {/* Admin Dashboard */}
       <Route path="/dashboard/admin/add-admin" Component={AddAdminPage} />
+      <Route path="/dashboard/admin/add-doctor" Component={AddDoctorPage} />
     </Routes>
   );
 };

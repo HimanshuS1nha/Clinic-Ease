@@ -22,4 +22,8 @@ export const adminSidebarItems = [
     title: "Add Admin",
     url: "add-admin",
   },
+  {
+    title: "Add Doctor",
+    url: "add-doctor",
+  },
 ];

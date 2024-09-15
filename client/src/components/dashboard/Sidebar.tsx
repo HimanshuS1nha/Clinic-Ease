@@ -46,7 +46,7 @@ const Sidebar = () => {
   });
   return (
     <div className="w-[280px] px-8 pt-5 flex flex-col gap-y-6">
-      {user?.role !== "patient"
+      {user?.role === "patient"
         ? patientSidebarItems.map((item) => {
             return (
               <Link
