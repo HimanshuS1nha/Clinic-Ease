@@ -51,7 +51,7 @@ const SignupPage = () => {
     onSuccess: (data) => {
       toast.success(data.message);
 
-      navigate("/login", { replace: true });
+      navigate("/login/patient", { replace: true });
     },
     onError: (error) => {
       if (error instanceof AxiosError && error.response?.data.message) {

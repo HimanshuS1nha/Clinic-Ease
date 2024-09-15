@@ -34,7 +34,9 @@ const Sidebar = () => {
     },
     onSuccess: (data) => {
       toast.success(data.message);
-      navigate(`/login/${user?.role}`, { replace: true });
+      navigate(`/login/${user?.role === "doctor" ? "doctor" : "patient"}`, {
+        replace: true,
+      });
       setUser(null);
     },
     onError: (error) => {
@@ -97,8 +99,8 @@ const Sidebar = () => {
 
             <div className="flex flex-col">
               <p className="text-lg font-semibold">
-                {user?.email && user?.email.length > 15
-                  ? user?.email.substring(0, 15) + "..."
+                {user?.email && user?.email.length > 10
+                  ? user?.email.substring(0, 10) + "..."
                   : user?.email}
               </p>
               <p className="text-gray-700 text-sm -mt-0.5 capitalize">

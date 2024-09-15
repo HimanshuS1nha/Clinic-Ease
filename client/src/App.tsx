@@ -20,10 +20,12 @@ import AddAdminPage from "./pages/admin-dashboard/AddAdminPage";
 import AddDoctorPage from "./pages/admin-dashboard/AddDoctorPage";
 import DoctorDetailsPage from "./pages/admin-dashboard/DoctorDetailsPage";
 
-import { useUser } from "./hooks/useUser";
-import type { UserType } from "types";
 import DoctorDashboardPage from "./pages/doctor-dashboard/DoctorDashboardPage";
 import CreatePrescriptionPage from "./pages/doctor-dashboard/CreatePrescriptionPage";
+import CreateMedicalTest from "./pages/doctor-dashboard/CreateMedicalTest";
+
+import { useUser } from "./hooks/useUser";
+import type { UserType } from "types";
 
 const App = () => {
   const { setUser } = useUser();
@@ -36,13 +38,17 @@ const App = () => {
         { withCredentials: true }
       );
 
-      return data as { user: { _doc: UserType } };
+      return data as { user: { _doc: UserType }; role?: "doctor" };
     },
   });
 
   useEffect(() => {
     if (data?.user._doc) {
-      setUser(data.user._doc);
+      if (data.role) {
+        setUser({ ...data.user._doc, role: data.role });
+      } else {
+        setUser(data.user._doc);
+      }
     }
   }, [data]);
   return (
@@ -84,6 +90,10 @@ const App = () => {
       <Route
         path="/dashboard/doctor/create-prescription"
         Component={CreatePrescriptionPage}
+      />
+      <Route
+        path="/dashboard/doctor/create-medical-test"
+        Component={CreateMedicalTest}
       />
     </Routes>
   );

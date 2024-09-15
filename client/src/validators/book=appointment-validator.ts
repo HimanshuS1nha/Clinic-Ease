@@ -9,7 +9,6 @@ export const bookAppointmentValidator = z.object({
     .string({ required_error: "Please select a patient" })
     .trim()
     .min(1, { message: "Please select a patient" }),
-  date: z.date(),
 });
 
 export type bookAppointmentValidatorType = z.infer<

@@ -4,6 +4,7 @@ import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 import DashboardWrapper from "@/components/dashboard/DashboardWrapper";
 import Title from "@/components/dashboard/Title";
@@ -24,7 +25,7 @@ import {
 import { Loader2 } from "lucide-react";
 
 const BookAppointmentPage = () => {
-  // const [date, setDate] = useState<Date>();
+  const [date, setDate] = useState<Date>();
 
   const {
     handleSubmit,
@@ -36,7 +37,6 @@ const BookAppointmentPage = () => {
     defaultValues: {
       doctorId: "",
       patientId: "",
-      date: new Date(),
     },
     resolver: zodResolver(bookAppointmentValidator),
   });
@@ -99,9 +99,13 @@ const BookAppointmentPage = () => {
   const { mutate: handleBookAppointment, isPending } = useMutation({
     mutationKey: ["book-appointment"],
     mutationFn: async (values: bookAppointmentValidatorType) => {
+      if (!date) {
+        throw new Error("Please select a date");
+      }
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/appointments/create`,
-        { ...values }
+        { ...values, date },
+        { withCredentials: true }
       );
 
       return data as { message: string };
@@ -114,7 +118,7 @@ const BookAppointmentPage = () => {
       if (error instanceof AxiosError && error.response?.data.message) {
         toast.error(error.response.data.message);
       } else {
-        toast.error("Some error occured. Please try again later!");
+        toast.error(error.message);
       }
     },
   });
@@ -181,13 +185,7 @@ const BookAppointmentPage = () => {
           </div>
           <div className="flex flex-col gap-y-3">
             <Label className="ml-1.5">Date</Label>
-            <DatePicker
-              date={getValues("date")}
-              setDate={(date) => setValue("date", date as Date)}
-            />
-            {errors.date && (
-              <p className="text-rose-500 text-sm">{errors.date.message}</p>
-            )}
+            <DatePicker date={date} setDate={setDate} />
           </div>
           <Button type="submit" disabled={isPending}>
             {isPending ? "Please wait..." : "Book"}

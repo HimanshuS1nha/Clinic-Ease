@@ -37,4 +37,8 @@ export const doctorSidebarItems = [
     title: "Create Prescription",
     url: "create-prescription",
   },
+  {
+    title: "Create Medical Test",
+    url: "create-medical-test",
+  },
 ];
