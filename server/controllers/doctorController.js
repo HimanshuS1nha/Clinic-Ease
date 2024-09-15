@@ -54,7 +54,12 @@ export const loginDoctor = async (req, res) => {
       sameSite: "None",
     });
 
-    res.status(200).json({ message: "Logged in successfully", token });
+    const { password: _, ...restDoctor } = doctor;
+
+    res.status(200).json({
+      message: "Logged in successfully",
+      user: { ...restDoctor },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

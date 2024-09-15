@@ -49,3 +49,13 @@ export const getPatientById = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+export const getAllPatients = async (req, res) => {
+  try {
+    const patients = await Patient.find().select("id name");
+
+    return res.status(200).json(patients);
+  } catch (error) {
+    res.status(400).json({ error: err.message });
+  }
+};

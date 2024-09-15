@@ -1,4 +1,5 @@
 import User from "../models/userModel.js";
+import Doctor from "../models/doctorModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -93,19 +94,30 @@ export const isUserLoggedIn = async (req, res) => {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
-    const { id } = jwt.verify(token, process.env.JWT_TOKEN);
+    const { id, role } = jwt.verify(token, process.env.JWT_TOKEN);
     if (!id) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const user = await User.findOne({ _id: id });
-    if (!user) {
-      return res.status(401).json({ error: "Unauthorized" });
+    if (role === "doctor") {
+      const doctor = await Doctor.findOne({ _id: id });
+      if (!doctor) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const { password: _, ...restDoctor } = doctor;
+
+      return res.status(200).json({ user: restDoctor, role: "doctor" });
+    } else {
+      const user = await User.findOne({ _id: id });
+      if (!user) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const { password, ...restUser } = user;
+
+      return res.status(200).json({ user: restUser });
     }
-
-    const { password, ...restUser } = user;
-
-    return res.status(200).json({ user: restUser });
   } catch (error) {
     res.status(500).json({ message: "Some error occured." });
   }
