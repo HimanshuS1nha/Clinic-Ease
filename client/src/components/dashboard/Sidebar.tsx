@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import {
   adminSidebarItems,
+  doctorSidebarItems,
   patientSidebarItems,
 } from "../../../constants/sidebar-items";
 import {
@@ -33,8 +34,8 @@ const Sidebar = () => {
     },
     onSuccess: (data) => {
       toast.success(data.message);
+      navigate(`/login/${user?.role}`, { replace: true });
       setUser(null);
-      navigate("/login", { replace: true });
     },
     onError: (error) => {
       if (error instanceof AxiosError && error.response?.data.error) {
@@ -46,29 +47,44 @@ const Sidebar = () => {
   });
   return (
     <div className="w-[280px] px-8 pt-5 flex flex-col gap-y-6">
-      {user?.role === "patient"
-        ? patientSidebarItems.map((item) => {
-            return (
-              <Link
-                to={`/dashboard/patient/${item.url}`}
-                className="font-semibold hover:text-emerald-600 delay-100 transition-all"
-                key={item.title}
-              >
-                {item.title}
-              </Link>
-            );
-          })
-        : adminSidebarItems.map((item) => {
-            return (
-              <Link
-                to={`/dashboard/admin/${item.url}`}
-                className="font-semibold hover:text-emerald-600 delay-100 transition-all"
-                key={item.title}
-              >
-                {item.title}
-              </Link>
-            );
-          })}
+      {user?.role === "patient" &&
+        patientSidebarItems.map((item) => {
+          return (
+            <Link
+              to={`/dashboard/patient/${item.url}`}
+              className="font-semibold hover:text-emerald-600 delay-100 transition-all"
+              key={item.title}
+            >
+              {item.title}
+            </Link>
+          );
+        })}
+
+      {user?.role === "admin" &&
+        adminSidebarItems.map((item) => {
+          return (
+            <Link
+              to={`/dashboard/admin/${item.url}`}
+              className="font-semibold hover:text-emerald-600 delay-100 transition-all"
+              key={item.title}
+            >
+              {item.title}
+            </Link>
+          );
+        })}
+
+      {user?.role === "doctor" &&
+        doctorSidebarItems.map((item) => {
+          return (
+            <Link
+              to={`/dashboard/doctor/${item.url}`}
+              className="font-semibold hover:text-emerald-600 delay-100 transition-all"
+              key={item.title}
+            >
+              {item.title}
+            </Link>
+          );
+        })}
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -80,7 +96,11 @@ const Sidebar = () => {
             </div>
 
             <div className="flex flex-col">
-              <p className="text-lg font-semibold">{user?.email}</p>
+              <p className="text-lg font-semibold">
+                {user?.email && user?.email.length > 15
+                  ? user?.email.substring(0, 15) + "..."
+                  : user?.email}
+              </p>
               <p className="text-gray-700 text-sm -mt-0.5 capitalize">
                 {user?.role}
               </p>

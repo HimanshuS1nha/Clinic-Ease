@@ -39,8 +39,8 @@ const Navbar = () => {
     },
     onSuccess: (data) => {
       toast.success(data.message);
+      navigate(`/login/${user?.role}`, { replace: true });
       setUser(null);
-      navigate("/login", { replace: true });
     },
     onError: (error) => {
       if (error instanceof AxiosError && error.response?.data.error) {
@@ -119,9 +119,29 @@ const Navbar = () => {
           </DropdownMenu>
         ) : (
           <>
-            <Button variant={"ghost"} asChild className="hidden lg:block">
-              <Link to={"/login"}>Login</Link>
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant={"ghost"} asChild className="hidden lg:block">
+                  <Link to={"/login"}>Login</Link>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="focus:bg-emerald-600 focus:text-white cursor-pointer"
+                  asChild
+                >
+                  <Link to={`/login/patient`}>Login as Patient/Admin</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="focus:bg-emerald-600 focus:text-white cursor-pointer"
+                  asChild
+                >
+                  <Link to={`/login/doctor`}>Login as Doctor</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button asChild>
               <Link to={"/signup"}>Signup</Link>
             </Button>

@@ -147,7 +147,7 @@ const SignupPage = () => {
             <p className="text-sm">
               Already have an account?{" "}
               <Link
-                to={"/login"}
+                to={"/login/patient"}
                 className={`font-semibold hover:text-emerald-600 delay-75 transition-all cursor-pointer ${
                   isPending ? "pointer-events-none" : ""
                 }`}

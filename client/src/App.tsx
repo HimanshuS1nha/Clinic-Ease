@@ -5,7 +5,8 @@ import { useEffect } from "react";
 
 import HomePage from "./pages/HomePage";
 
-import LoginPage from "./pages/auth/LoginPage";
+import PatientLoginPage from "./pages/auth/PatientLoginPage";
+import DoctorLoginPage from "./pages/auth/DoctorLoginPage";
 import SignupPage from "./pages/auth/SignupPage";
 
 import PatientDashboardPage from "./pages/patient-dashboard/PatientDashboardPage";
@@ -14,12 +15,15 @@ import AppointmentDetailsPage from "./pages/patient-dashboard/AppointmentDetails
 import TestDetailsPage from "./pages/patient-dashboard/TestDetailsPage";
 import AddPatientPage from "./pages/patient-dashboard/AddPatientPage";
 
+import AdminDashboardPage from "./pages/admin-dashboard/AdminDashboardPage";
 import AddAdminPage from "./pages/admin-dashboard/AddAdminPage";
 import AddDoctorPage from "./pages/admin-dashboard/AddDoctorPage";
 import DoctorDetailsPage from "./pages/admin-dashboard/DoctorDetailsPage";
 
 import { useUser } from "./hooks/useUser";
 import type { UserType } from "types";
+import DoctorDashboardPage from "./pages/doctor-dashboard/DoctorDashboardPage";
+import CreatePrescriptionPage from "./pages/doctor-dashboard/CreatePrescriptionPage";
 
 const App = () => {
   const { setUser } = useUser();
@@ -46,7 +50,8 @@ const App = () => {
       <Route path="/" Component={HomePage} />
 
       {/* Auth */}
-      <Route path="/login" Component={LoginPage} />
+      <Route path="/login/patient" Component={PatientLoginPage} />
+      <Route path="/login/doctor" Component={DoctorLoginPage} />
       <Route path="/signup" Component={SignupPage} />
 
       {/* Patient Dashboard */}
@@ -66,9 +71,20 @@ const App = () => {
       />
 
       {/* Admin Dashboard */}
+      <Route path="/dashboard/admin" Component={AdminDashboardPage} />
       <Route path="/dashboard/admin/add-admin" Component={AddAdminPage} />
       <Route path="/dashboard/admin/add-doctor" Component={AddDoctorPage} />
-      <Route path="/dashboard/admin/doctor-details" Component={DoctorDetailsPage} />
+      <Route
+        path="/dashboard/admin/doctor-details"
+        Component={DoctorDetailsPage}
+      />
+
+      {/* Doctor Dashboard */}
+      <Route path="/dashboard/doctor" Component={DoctorDashboardPage} />
+      <Route
+        path="/dashboard/doctor/create-prescription"
+        Component={CreatePrescriptionPage}
+      />
     </Routes>
   );
 };

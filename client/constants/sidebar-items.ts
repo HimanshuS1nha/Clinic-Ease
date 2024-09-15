@@ -31,3 +31,10 @@ export const adminSidebarItems = [
     url: "doctor-details",
   },
 ];
+
+export const doctorSidebarItems = [
+  {
+    title: "Create Prescription",
+    url: "create-prescription",
+  },
+];

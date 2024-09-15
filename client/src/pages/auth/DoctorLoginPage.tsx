@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
@@ -15,7 +15,7 @@ import {
 } from "@/validators/login-validator";
 import type { UserType } from "types";
 
-const LoginPage = () => {
+const DoctorLoginPage = () => {
   const { setUser } = useUser();
   const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ const LoginPage = () => {
     mutationKey: ["login"],
     mutationFn: async (values: loginValidatorType) => {
       const { data } = await axios.post(
-        `${import.meta.env.VITE_API_URL}/user/login`,
+        `${import.meta.env.VITE_API_URL}/doctor/login`,
         {
           email: values.email,
           password: values.password,
@@ -50,14 +50,14 @@ const LoginPage = () => {
     },
     onSuccess: (data) => {
       toast.success(data.message);
-      setUser({ ...data.user._doc });
+      setUser({
+        _id: data.user._doc._id,
+        email: data.user._doc.email,
+        mobile: data.user._doc.mobile,
+        role: "doctor",
+      });
       reset();
-
-      if (data.user._doc.role === "admin") {
-        navigate("/dashboard/admin");
-      } else {
-        navigate("/dashboard/patient");
-      }
+      navigate("/dashboard/doctor");
     },
     onError: (error) => {
       if (error instanceof AxiosError && error.response?.data.message) {
@@ -78,7 +78,8 @@ const LoginPage = () => {
           <div className="flex flex-col gap-y-2">
             <p className="font-bold text-lg">Sign In</p>
             <p className="text-sm text-gray-700">
-              to continue to <span className="font-semibold">clinicease</span>
+              to continue to{" "}
+              <span className="font-semibold">clinicease as doctor</span>
             </p>
           </div>
 
@@ -118,24 +119,10 @@ const LoginPage = () => {
               {isPending ? "Please wait..." : "Login"}
             </Button>
           </form>
-
-          <div className="flex w-full justify-center">
-            <p className="text-sm">
-              Don&apos;t have an account?{" "}
-              <Link
-                to={"/signup"}
-                className={`font-semibold hover:text-emerald-600 delay-75 transition-all cursor-pointer ${
-                  isPending ? "pointer-events-none" : ""
-                }`}
-              >
-                Signup
-              </Link>
-            </p>
-          </div>
         </div>
       </div>
     </section>
   );
 };
 
-export default LoginPage;
+export default DoctorLoginPage;
