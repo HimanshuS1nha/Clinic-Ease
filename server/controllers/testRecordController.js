@@ -8,10 +8,19 @@ import { generate } from "../utils/geminiUtility.js";
 
 export const createMedicalTest = async (req, res) => {
   try {
-    const test = new MedicalTest(req.body);
+    const { patientId, doctor, labName, testName, testDate, result } = req.body;
+    const test = new MedicalTest({
+      doctor,
+      labName,
+      patient: patientId,
+      result,
+      testDate,
+      testName,
+    });
     await test.save();
-    res.status(201).json(test);
+    res.status(201).json({ message: "Medical test created successfully" });
   } catch (err) {
+    console.log(err);
     res.status(400).json({ error: err.message });
   }
 };

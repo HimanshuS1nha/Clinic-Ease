@@ -3,11 +3,15 @@ import Patient from "../models/patientDetailsModel.js";
 import Doctor from "../models/doctorModel.js";
 import User from "../models/userModel.js";
 
+const addZero = (value) => {
+  return value.length > 1 ? value : "0" + value;
+};
+
 export const bookAppointment = async (req, res) => {
   try {
-    const { userId, doctorId, appointmentDate } = req.body;
+    const { patientId, doctorId, date } = req.body;
 
-    const user = await Patient.findById(userId);
+    const user = await Patient.findById(patientId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -18,7 +22,7 @@ export const bookAppointment = async (req, res) => {
     }
 
     const latestAppointment = await Appointment.findOne({
-      appointmentDate,
+      appointmentDate: date,
       doctor: doctorId,
     }).sort({ queueNumber: -1 });
 
@@ -27,9 +31,9 @@ export const bookAppointment = async (req, res) => {
       : 1;
 
     const newAppointment = new Appointment({
-      user: userId,
+      user: patientId,
       doctor: doctorId,
-      appointmentDate,
+      appointmentDate: date,
       queueNumber,
     });
 
@@ -65,7 +69,13 @@ export const getAppointments = async (req, res) => {
           const doctor = await Doctor.findOne({ _id: appointment.doctor });
           appointments.push({
             id: appointment._id,
-            date: appointment.date,
+            date: `${new Date(
+              appointment.appointmentDate
+            ).getFullYear()}-${addZero(
+              new Date(appointment.appointmentDate).getMonth().toString()
+            )}-${addZero(
+              new Date(appointment.appointmentDate).getDate().toString()
+            )}`,
             patientName: patient.name,
             doctorName: doctor.name,
           });

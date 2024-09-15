@@ -7,7 +7,7 @@ export const createPrescription = async (req, res) => {
   try {
     const prescription = new Prescription(req.body);
     await prescription.save();
-    res.status(201).json(prescription);
+    res.status(201).json({ message: "Prescription created successfully" });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
