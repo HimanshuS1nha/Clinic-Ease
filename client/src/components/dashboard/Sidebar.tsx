@@ -3,7 +3,10 @@ import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 
-import { patientSidebarItems } from "../../../constants/sidebar-items";
+import {
+  adminSidebarItems,
+  patientSidebarItems,
+} from "../../../constants/sidebar-items";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -43,17 +46,29 @@ const Sidebar = () => {
   });
   return (
     <div className="w-[280px] px-8 pt-5 flex flex-col gap-y-6">
-      {patientSidebarItems.map((item) => {
-        return (
-          <Link
-            to={`/dashboard/patient/${item.url}`}
-            className="font-semibold hover:text-emerald-600 delay-100 transition-all"
-            key={item.title}
-          >
-            {item.title}
-          </Link>
-        );
-      })}
+      {user?.role === "patient"
+        ? patientSidebarItems.map((item) => {
+            return (
+              <Link
+                to={`/dashboard/patient/${item.url}`}
+                className="font-semibold hover:text-emerald-600 delay-100 transition-all"
+                key={item.title}
+              >
+                {item.title}
+              </Link>
+            );
+          })
+        : adminSidebarItems.map((item) => {
+            return (
+              <Link
+                to={`/dashboard/admin/${item.url}`}
+                className="font-semibold hover:text-emerald-600 delay-100 transition-all"
+                key={item.title}
+              >
+                {item.title}
+              </Link>
+            );
+          })}
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

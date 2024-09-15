@@ -16,3 +16,10 @@ export const patientSidebarItems = [
     url: "test-details",
   },
 ];
+
+export const adminSidebarItems = [
+  {
+    title: "Create Admin",
+    url: "create-admin",
+  },
+];
