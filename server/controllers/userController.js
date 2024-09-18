@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 export const createUser = async (req, res) => {
   const { email, mobile, password } = req.body;
 
+  console.log(email, password);
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
@@ -32,6 +33,7 @@ export const createUser = async (req, res) => {
       .status(201)
       .json({ message: "User created successfully", user: newUser });
   } catch (error) {
+    console.log(error);
     res.status(400).json({ message: "Error creating user", error });
   }
 };
@@ -124,14 +126,12 @@ export const isUserLoggedIn = async (req, res) => {
 };
 
 export const createAdmin = async (req, res) => {
-  const { name, email, mobile, password } = req.body;
+  const { email, password } = req.body;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newAdmin = new User({
-      name,
       email,
-      mobile,
       password: hashedPassword,
       role: "admin",
     });

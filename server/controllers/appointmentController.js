@@ -2,6 +2,7 @@ import Appointment from "../models/appointmentModel.js";
 import Patient from "../models/patientDetailsModel.js";
 import Doctor from "../models/doctorModel.js";
 import User from "../models/userModel.js";
+import mongoose from "mongoose";
 
 const addZero = (value) => {
   return value.length > 1 ? value : "0" + value;
@@ -10,6 +11,7 @@ const addZero = (value) => {
 export const bookAppointment = async (req, res) => {
   try {
     const { patientId, doctorId, date } = req.body;
+    const appointmentDate = new Date(date);
 
     const user = await Patient.findById(patientId);
     if (!user) {
@@ -22,7 +24,7 @@ export const bookAppointment = async (req, res) => {
     }
 
     const latestAppointment = await Appointment.findOne({
-      appointmentDate: date,
+      appointmentDate,
       doctor: doctorId,
     }).sort({ queueNumber: -1 });
 
@@ -33,7 +35,7 @@ export const bookAppointment = async (req, res) => {
     const newAppointment = new Appointment({
       user: patientId,
       doctor: doctorId,
-      appointmentDate: date,
+      appointmentDate,
       queueNumber,
     });
 
@@ -78,6 +80,7 @@ export const getAppointments = async (req, res) => {
             )}`,
             patientName: patient.name,
             doctorName: doctor.name,
+            queueNumber: appointment.queueNumber
           });
         }
       }
@@ -109,8 +112,8 @@ export const getAppointmentsByDate = async (req, res) => {
 
 export const getAppointmentsByDoctor = async (req, res) => {
   try {
-    const { doctorId } = req.params;
-    const appointments = await Appointment.find({ doctor: doctorId })
+    const { id } = req.user;
+    const appointments = await Appointment.find({ doctor: id })
       .populate("user", "name email mobile")
       .populate("doctor", "name doctorType")
       .sort({ appointmentDate: 1, queueNumber: 1 });
@@ -124,11 +127,16 @@ export const getAppointmentsByDoctor = async (req, res) => {
 
 export const getCurrentQueueNumbber = async (req, res) => {
   try {
-    const { date, doctorId } = req.params;
+    const { date, doctor } = req.params;
+    const startOfDay = new Date(date);
+    startOfDay.setUTCHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setUTCHours(23, 59, 59, 999);
 
+    const doctorObjectId = new mongoose.Types.ObjectId(doctor);
     const currentPatient = await Appointment.findOne({
-      appointmentDate: new Date(date),
-      doctor: doctorId,
+      appointmentDate: { $gte: startOfDay, $lte: endOfDay },
+      doctor: doctorObjectId,
       status: "Pending",
     }).sort({ queueNumber: 1 });
 
@@ -146,6 +154,7 @@ export const getCurrentQueueNumbber = async (req, res) => {
 export const markAppointmentCompleted = async (req, res) => {
   try {
     const { appointmentId } = req.body;
+    console.log(appointmentId);
     const appointment = await Appointment.findByIdAndUpdate(
       appointmentId,
       {
@@ -153,6 +162,32 @@ export const markAppointmentCompleted = async (req, res) => {
       },
       { new: true }
     );
+    console.log(appointment);
+
+    if (!appointment) {
+      return res.status(404).json({ message: "Appointment not found" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Appointment marked as completed", appointment });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+export const markAppointmentLater = async (req, res) => {
+  try {
+    const { appointmentId } = req.body;
+    console.log(appointmentId);
+    const appointment = await Appointment.findByIdAndUpdate(
+      appointmentId,
+      {
+        status: "Later",
+      },
+      { new: true }
+    );
+    console.log(appointment);
 
     if (!appointment) {
       return res.status(404).json({ message: "Appointment not found" });

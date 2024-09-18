@@ -17,6 +17,6 @@ router.post("/user/login", loginUser);
 router.get("/user/is-logged-in", isUserLoggedIn);
 router.get("/user/logout", logoutUser);
 
-router.post("/admin/create", adminMiddleware, createAdmin);
+router.post("/admin/create",  createAdmin);
 
 export default router;

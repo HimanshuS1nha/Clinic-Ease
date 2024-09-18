@@ -2,17 +2,19 @@ import MedicalTest from "../models/testRecordModel.js";
 import User from "../models/userModel.js";
 import Doctor from "../models/doctorModel.js";
 import Patient from "../models/patientDetailsModel.js";
-import { ocrImageWithTesseract } from "../utils/imageOCRUtility.js";
 import { uploadImageToFirebase } from "../utils/firebaseUtility.js";
 import { generate } from "../utils/geminiUtility.js";
+import mongoose from "mongoose";
 
 export const createMedicalTest = async (req, res) => {
   try {
-    const { patientId, doctor, labName, testName, testDate, result } = req.body;
+    const {id} = req.params
+    const {  doctor, labName, testName, testDate, result } = req.body;
+    const doctorObjectId = new mongoose.Types.ObjectId(doctor);
     const test = new MedicalTest({
-      doctor,
+      doctor:doctorObjectId,
       labName,
-      patient: patientId,
+      patient: id,
       result,
       testDate,
       testName,
@@ -78,24 +80,33 @@ export const getMedicalTestsByUserId = async (req, res) => {
 
 export const createTestRecordByImage = async (req, res) => {
   try {
-    const { patientId } = req.body;
+    const { id } = req.params;
     const imageFile = req.file;
 
     const imageUrl = await uploadImageToFirebase(imageFile);
-    const testsText = await ocrImageWithTesseract(imageUrl);
+    const extractedData = await generate(imageFile, "tests");
+    if (!extractedData || extractedData.length === 0) {
+      return res.status(400).json({ message: "No tests found in the image." });
+    }
+    for (const item of extractedData) {
+      const newMedicalTest = new MedicalTest({
+        patient: id, 
+        testDate: item.testDate,
+        testName: item.testName,
+        result: item.result,
+        labName: item.labName,
+        imageUrl, 
+      });
 
-    const data = await generate("tests", testsText);
-    const newMedicalTest = new MedicalTest({
-      patientId,
-      doctorName,
-      prescriptionText,
-      imageUrl,
+      await newMedicalTest.save();
+    }
+
+    res.status(201).json({
+      message: "Medical test(s) created successfully",
     });
-    // change above this accordingly
-
-    await newMedicalTest.save();
-    res.status(201).json(newMedicalTest);
   } catch (error) {
+    console.error("Error processing image:", error);
     res.status(500).json({ message: "Error processing image", error });
   }
 };
+
