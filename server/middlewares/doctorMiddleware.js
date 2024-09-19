@@ -1,17 +1,18 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
 export const doctorMiddleware = (req, res, next) => {
-  const authHeader = req.cookies['authorization'];
+  const authHeader = req.cookies["authorization"];
 
   if (!authHeader) {
-    return res.status(401).json({ message: 'Access denied. No token provided.' });
+    return res
+      .status(401)
+      .json({ message: "Access denied. No token provided." });
   }
 
   jwt.verify(authHeader, process.env.JWT_TOKEN, (err, doctor) => {
     if (err) {
-      return res.status(403).json({ message: 'Invalid token.' });
+      return res.status(403).json({ message: "Invalid token." });
     }
-
     req.user = doctor;
     next();
   });

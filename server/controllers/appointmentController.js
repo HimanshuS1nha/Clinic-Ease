@@ -109,11 +109,34 @@ export const getAppointmentsByDate = async (req, res) => {
 
 export const getAppointmentsByDoctor = async (req, res) => {
   try {
-    const { doctorId } = req.params;
-    const appointments = await Appointment.find({ doctor: doctorId })
-      .populate("user", "name email mobile")
-      .populate("doctor", "name doctorType")
-      .sort({ appointmentDate: 1, queueNumber: 1 });
+    const id = req.user.id;
+
+    const dbAppointments = await Appointment.find({
+      doctor: id,
+    });
+
+    let appointments = [];
+
+    if (dbAppointments.length !== 0) {
+      for await (const appointment of dbAppointments) {
+        const patient = await Doctor.findOne({ _id: appointment.user });
+        appointments.push({
+          id: appointment._id,
+          date: `${new Date(
+            appointment.appointmentDate
+          ).getFullYear()}-${addZero(
+            new Date(appointment.appointmentDate).getMonth().toString()
+          )}-${addZero(
+            new Date(appointment.appointmentDate).getDate().toString()
+          )}`,
+          patientName: patient.name,
+        });
+      }
+    }
+    // const appointments = await Appointment.find({ doctor: doctorId })
+    //   .populate("user", "name email mobile")
+    //   .populate("doctor", "name doctorType")
+    //   .sort({ appointmentDate: 1, queueNumber: 1 });
 
     res.status(200).json(appointments);
   } catch (error) {
