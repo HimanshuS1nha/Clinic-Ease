@@ -16,9 +16,7 @@ export const doctorMiddleware = (req, res, next) => {
     if (user.role !== 'doctor') {
       return res.status(403).json({ message: 'Access denied. Admins only.' });
     }
-    if (user.role !== 'doctor') {
-      return res.status(403).json({ message: 'Access denied. Admins only.' });
-    }
+    
     req.user = doctor;
     next();
   });
