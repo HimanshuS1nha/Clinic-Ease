@@ -8,8 +8,8 @@ const upload = multer({
     storage: multer.memoryStorage()
 });
 
-router.post('/prescription/create',authorizeCreationMiddleware, createPrescription);
-router.post('/prescription/createbyimage',authorizeCreationMiddleware, upload.single('image'), createPrescriptionFromImage);
+router.post('/prescription/create/:patientId',authorizeCreationMiddleware, createPrescription);
+router.post('/prescription/createbyimage/:patientId',authorizeCreationMiddleware, upload.single('image'), createPrescriptionFromImage);
 router.get('/prescription/:id', getPrescriptionsByPatient);
 
 

@@ -15,12 +15,12 @@ const upload = multer({
 });
 
 router.post(
-  "/testrecord/create",
+  "/testrecord/create/:id",
   authorizeCreationMiddleware,
   createMedicalTest
 );
 router.post(
-  "/testrecord/createbyimage",
+  "/testrecord/createbyimage/:id",
   authorizeCreationMiddleware,
   upload.single("image"),
   createTestRecordByImage

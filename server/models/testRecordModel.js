@@ -6,20 +6,20 @@ const testRecordSchema = new mongoose.Schema({
     ref: "Patient",
     required: true,
   },
-  testName: {
-    type: String,
-    required: true,
+  doctor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Doctor",
   },
   testDate: {
     type: Date,
     required: true,
   },
+  testName: {
+    type: String,
+    required: true,
+  },
   result: {
     type: String,
-  },
-  doctor: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Doctor",
   },
   labName: {
     type: String,

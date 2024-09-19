@@ -17,18 +17,15 @@ export const authorizeCreationMiddleware = async (req, res, next) => {
       if (err) {
         return res.status(403).json({ message: "Invalid token." });
       }
-
-      const patient = await Patient.findById(patientId);
-      if (!patient) {
-        return res.status(404).json({ message: "Patient not found." });
+      if (req.user.role === "user") {
+        const patient = await Patient.findById(patientId);
+        if (!patient) {
+          return res.status(404).json({ message: "Patient not found." });
+        }else if(patient.userId.toString() === req.user.id){
+          return next()
+        }
       }
       if (req.user.role === "doctor") {
-        return next();
-      }
-      if (
-        req.user.role === "user" &&
-        patient.userId.toString() === req.user.id
-      ) {
         return next();
       }
       return res.status(403).json({
