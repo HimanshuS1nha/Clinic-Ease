@@ -4,15 +4,12 @@ import Doctor from "../models/doctorModel.js";
 import User from "../models/userModel.js";
 import mongoose from "mongoose";
 
-const addZero = (value) => {
-  return value.length > 1 ? value : "0" + value;
-};
+
 
 export const bookAppointment = async (req, res) => {
   try {
     const { patientId, doctorId, date } = req.body;
     const appointmentDate = new Date(date);
-
     const user = await Patient.findById(patientId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -71,17 +68,13 @@ export const getAppointments = async (req, res) => {
           const doctor = await Doctor.findOne({ _id: appointment.doctor });
           appointments.push({
             id: appointment._id,
-            date: `${new Date(
-              appointment.appointmentDate
-            ).getFullYear()}-${addZero(
-              new Date(appointment.appointmentDate).getMonth().toString()
-            )}-${addZero(
-              new Date(appointment.appointmentDate).getDate().toString()
-            )}`,
+            date: appointment.appointmentDate,
             patientName: patient.name,
             doctorName: doctor.name,
+            doctorId:doctor._id,
             queueNumber: appointment.queueNumber
           });
+          
         }
       }
     }
@@ -112,18 +105,41 @@ export const getAppointmentsByDate = async (req, res) => {
 
 export const getAppointmentsByDoctor = async (req, res) => {
   try {
-    const { id } = req.user;
-    const appointments = await Appointment.find({ doctor: id })
+    const doctorId = req.user.id;
+
+    const doctor = await Doctor.findOne({ _id: doctorId });
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    // Find all appointments for the doctor
+    const appointments = await Appointment.find({ doctor: doctorId })
       .populate("user", "name email mobile")
       .populate("doctor", "name doctorType")
       .sort({ appointmentDate: 1, queueNumber: 1 });
+      
+    let appointmentDetails = [];
 
-    res.status(200).json(appointments);
+    for await (const appointment of appointments) {
+      
+        // Push formatted appointment details to the array
+        appointmentDetails.push({
+          id: appointment._id,
+          appointmentDate: appointment.appointmentDate,
+          patientName: appointment.user.name,
+          patientId: appointment.user._id,
+          status:appointment.status,
+          queueNumber: appointment.queueNumber,
+        });
+    }
+
+    return res.status(200).json(appointmentDetails);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 export const getCurrentQueueNumbber = async (req, res) => {
   try {
@@ -139,6 +155,9 @@ export const getCurrentQueueNumbber = async (req, res) => {
       doctor: doctorObjectId,
       status: "Pending",
     }).sort({ queueNumber: 1 });
+    console.log('====================================');
+    console.log(currentPatient, doctorObjectId, date);
+    console.log('====================================');
 
     if (!currentPatient) {
       return res.status(404).json({ message: "No pending patients" });

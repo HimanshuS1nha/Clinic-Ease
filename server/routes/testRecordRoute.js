@@ -25,7 +25,7 @@ router.post(
   upload.single("image"),
   createTestRecordByImage
 );
-router.get("/testrecord/:id", getMedicalTestByPatient);
+router.get("/testrecord/:patientId", getMedicalTestByPatient);
 router.get("/testrecords", userMiddleware, getMedicalTestsByUserId);
 
 export default router;

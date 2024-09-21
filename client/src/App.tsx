@@ -23,9 +23,14 @@ import DoctorDetailsPage from "./pages/admin-dashboard/DoctorDetailsPage";
 import DoctorDashboardPage from "./pages/doctor-dashboard/DoctorDashboardPage";
 import CreatePrescriptionPage from "./pages/doctor-dashboard/CreatePrescriptionPage";
 import CreateMedicalTest from "./pages/doctor-dashboard/CreateMedicalTest";
+import GetAppointment from "./pages/doctor-dashboard/GetAppointments";
+import UploadTestRecordPage from "./pages/doctor-dashboard/UploadTestRecord";
+import UploadPrescriptionPage from "./pages/doctor-dashboard/UploadPrescription";
+import PatientDetailsPage from "./pages/doctor-dashboard/PatientDetailPage";
 
 import { useUser } from "./hooks/useUser";
 import type { UserType } from "types";
+import PrescriptionDetailsPage from "./pages/patient-dashboard/PrescriptionDetailPage";
 
 const App = () => {
   const { setUser } = useUser();
@@ -75,6 +80,10 @@ const App = () => {
         path="/dashboard/patient/test-details"
         Component={TestDetailsPage}
       />
+      <Route
+        path="/dashboard/patient/prescription"
+        Component={PrescriptionDetailsPage}
+      />
 
       {/* Admin Dashboard */}
       <Route path="/dashboard/admin" Component={AdminDashboardPage} />
@@ -88,12 +97,28 @@ const App = () => {
       {/* Doctor Dashboard */}
       <Route path="/dashboard/doctor" Component={DoctorDashboardPage} />
       <Route
+        path="/dashboard/doctor/get-appointments"
+        Component={GetAppointment}
+      />
+      <Route
         path="/dashboard/doctor/create-prescription"
         Component={CreatePrescriptionPage}
       />
       <Route
+        path="/dashboard/doctor/create-prescription-image"
+        Component={UploadPrescriptionPage}
+      />
+      <Route
         path="/dashboard/doctor/create-medical-test"
         Component={CreateMedicalTest}
+      />
+      <Route
+        path="/dashboard/doctor/patient/:patientId"
+        Component={PatientDetailsPage}
+      />
+      <Route
+        path="/dashboard/doctor/create-medical-test-image"
+        Component={UploadTestRecordPage}
       />
     </Routes>
   );
