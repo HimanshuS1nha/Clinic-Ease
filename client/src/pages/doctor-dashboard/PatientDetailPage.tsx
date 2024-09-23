@@ -1,10 +1,10 @@
-import { useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import { Loader2 } from 'lucide-react';
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { Loader2 } from "lucide-react";
 import DashboardWrapper from "@/components/dashboard/DashboardWrapper";
 import Title from "@/components/dashboard/Title";
-import { DataTable } from "@/components/dashboard/DataTable"; 
+import { DataTable } from "@/components/dashboard/DataTable";
 
 type Prescription = {
   id: string;
@@ -22,7 +22,7 @@ const PatientDetailsPage = () => {
   const { patientId } = useParams<{ patientId: string }>();
 
   const { data: prescriptions, isLoading: isLoadingPrescriptions } = useQuery({
-    queryKey: ['prescription', patientId],
+    queryKey: ["prescription", patientId],
     queryFn: async () => {
       const { data } = await axios.get(
         `${import.meta.env.VITE_API_URL}/prescription/${patientId}`,
@@ -33,38 +33,38 @@ const PatientDetailsPage = () => {
   });
 
   const { data: testRecords, isLoading: isLoadingTestRecords } = useQuery({
-    queryKey: ['testRecord', patientId],
+    queryKey: ["testRecord", patientId],
     queryFn: async () => {
       const { data } = await axios.get(
         `${import.meta.env.VITE_API_URL}/testrecord/${patientId}`,
         { withCredentials: true }
       );
-      console.log('====================================');
+      console.log("====================================");
       console.log(data);
-      console.log('====================================');
+      console.log("====================================");
       return data as TestRecord[];
     },
   });
 
   const prescriptionColumns = [
     {
-      accessorKey: 'medicine',
-      header: 'Medicine',
+      accessorKey: "medicine",
+      header: "Medicine",
     },
     {
-      accessorKey: 'dosage',
-      header: 'Dosage',
+      accessorKey: "dosage",
+      header: "Dosage",
     },
   ];
 
   const testRecordColumns = [
     {
-      accessorKey: 'testName',
-      header: 'Test',
+      accessorKey: "testName",
+      header: "Test",
     },
     {
-      accessorKey: 'result',
-      header: 'Result',
+      accessorKey: "result",
+      header: "Result",
     },
   ];
 
@@ -79,12 +79,16 @@ const PatientDetailsPage = () => {
   return (
     <DashboardWrapper>
       <Title>Patient Details</Title>
-      
+
       <h2 className="text-lg font-semibold mt-5">Prescriptions</h2>
-      <DataTable columns={prescriptionColumns} data={prescriptions} />
+      {prescriptions && (
+        <DataTable columns={prescriptionColumns} data={prescriptions} />
+      )}
 
       <h2 className="text-lg font-semibold mt-5">Test Records</h2>
-      <DataTable columns={testRecordColumns} data={testRecords} />
+      {testRecords && (
+        <DataTable columns={testRecordColumns} data={testRecords} />
+      )}
     </DashboardWrapper>
   );
 };
