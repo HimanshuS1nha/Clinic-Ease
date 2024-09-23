@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
-import toast from "react-hot-toast";
+// import axios, { AxiosError } from "axios";
+// import toast from "react-hot-toast";
 import { ColumnDef } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
 
