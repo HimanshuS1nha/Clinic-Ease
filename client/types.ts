@@ -4,10 +4,3 @@ export type UserType = {
   mobile: string;
   role: "patient" | "admin" | "doctor";
 };
-
-export type PatientType = {
-  _id: string;
-  name: string;
-  age: number;
-  gender: string;
-};
