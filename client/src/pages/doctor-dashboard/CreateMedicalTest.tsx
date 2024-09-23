@@ -71,7 +71,7 @@ const CreateMedicalTest = () => {
     mutationKey: ["create-medical-test"],
     mutationFn: async (values: createMedicalTestValidatorType) => {
       const { data } = await axios.post(
-        `${import.meta.env.VITE_API_URL}/testrecord/create`,
+        `${import.meta.env.VITE_API_URL}/testrecord/create/${values.patientId}`,
         {
           patientId: values.patientId,
           doctor: user?._id,
@@ -138,20 +138,7 @@ const CreateMedicalTest = () => {
               </p>
             )}
           </div>
-          <div className="flex flex-col gap-y-3">
-            <Label className="ml-1.5" htmlFor="testName">
-              Test Name
-            </Label>
-            <Input
-              placeholder="Enter test name"
-              id="testName"
-              type="text"
-              {...register("testName", { required: true })}
-            />
-            {errors.testName && (
-              <p className="text-rose-500 text-sm">{errors.testName.message}</p>
-            )}
-          </div>
+          
           <div className="flex flex-col gap-y-3">
             <Label className="ml-1.5" htmlFor="testDate">
               Test Date
@@ -173,6 +160,20 @@ const CreateMedicalTest = () => {
             )}
           </div>
           <div className="flex flex-col gap-y-3">
+            <Label className="ml-1.5" htmlFor="testName">
+              Test Name
+            </Label>
+            <Input
+              placeholder="Enter test name"
+              id="testName"
+              type="text"
+              {...register("testName", { required: true })}
+            />
+            {errors.testName && (
+              <p className="text-rose-500 text-sm">{errors.testName.message}</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-y-3">
             <Label className="ml-1.5" htmlFor="result">
               Result
             </Label>
@@ -186,6 +187,14 @@ const CreateMedicalTest = () => {
               <p className="text-rose-500 text-sm">{errors.result.message}</p>
             )}
           </div>
+
+          <Button
+            type="button"
+            className="self-start mt-2"
+          >
+            Add one more test
+          </Button>
+
 
           <Button type="submit" disabled={isPending}>
             {isPending ? "Please wait..." : "Create"}

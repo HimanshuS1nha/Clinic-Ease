@@ -13,7 +13,7 @@ export const doctorMiddleware = (req, res, next) => {
     if (err) {
       return res.status(403).json({ message: "Invalid token." });
     }
-    if (user.role !== 'doctor') {
+    if (doctor.role !== 'doctor') {
       return res.status(403).json({ message: 'Access denied. Admins only.' });
     }
     

@@ -15,6 +15,10 @@ export const patientSidebarItems = [
     title: "Test Details",
     url: "test-details",
   },
+  {
+    title: "Prescription",
+    url: "prescription",
+  },
 ];
 
 export const adminSidebarItems = [
@@ -34,15 +38,23 @@ export const adminSidebarItems = [
 
 export const doctorSidebarItems = [
   {
+    title: "Get Apointments",
+    url: "get-appointments",
+  },
+  {
     title: "Create Prescription",
     url: "create-prescription",
+  },
+  {
+    title: "Upload Prescription",
+    url: "create-prescription-image",
   },
   {
     title: "Create Medical Test",
     url: "create-medical-test",
   },
   {
-    title: "Appointments List",
-    url: "appointments-list",
+    title: "Upload Test Record",
+    url: "create-medical-test-image",
   },
 ];

@@ -63,9 +63,9 @@ const CreatePrescriptionPage = () => {
     mutationKey: ["create-prescription"],
     mutationFn: async (values: createPrescriptionValidatorType) => {
       const { data } = await axios.post(
-        `${import.meta.env.VITE_API_URL}/prescription/create`,
+        `${import.meta.env.VITE_API_URL}/prescription/create/${values.patientId}`,
         {
-          dosage: parseInt(values.dosage),
+          dosage: values.dosage,
           medicine: values.medicine,
           patientId: values.patientId,
         },
@@ -145,13 +145,19 @@ const CreatePrescriptionPage = () => {
             <Input
               placeholder="Enter dosage"
               id="dosage"
-              type="number"
+              type="text"
               {...register("dosage", { required: true })}
             />
             {errors.dosage && (
               <p className="text-rose-500 text-sm">{errors.dosage.message}</p>
             )}
           </div>
+          <Button
+            type="button"
+            className="self-start mt-2"
+          >
+            Add one more medicine
+          </Button>
 
           <Button type="submit" disabled={isPending}>
             {isPending ? "Please wait..." : "Create"}
