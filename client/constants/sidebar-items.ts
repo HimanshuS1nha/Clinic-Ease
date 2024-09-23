@@ -41,4 +41,8 @@ export const doctorSidebarItems = [
     title: "Create Medical Test",
     url: "create-medical-test",
   },
+  {
+    title: "Appointments List",
+    url: "appointments-list",
+  },
 ];

@@ -23,6 +23,7 @@ import DoctorDetailsPage from "./pages/admin-dashboard/DoctorDetailsPage";
 import DoctorDashboardPage from "./pages/doctor-dashboard/DoctorDashboardPage";
 import CreatePrescriptionPage from "./pages/doctor-dashboard/CreatePrescriptionPage";
 import CreateMedicalTest from "./pages/doctor-dashboard/CreateMedicalTest";
+import AppointmentsListPage from "./pages/doctor-dashboard/AppointmentsListPage";
 
 import { useUser } from "./hooks/useUser";
 import type { UserType } from "types";
@@ -94,6 +95,10 @@ const App = () => {
       <Route
         path="/dashboard/doctor/create-medical-test"
         Component={CreateMedicalTest}
+      />
+      <Route
+        path="/dashboard/doctor/appointments-list"
+        Component={AppointmentsListPage}
       />
     </Routes>
   );
