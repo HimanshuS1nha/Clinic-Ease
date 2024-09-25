@@ -6,24 +6,33 @@ import { generate } from "../utils/geminiUtility.js";
 
 export const createPrescription = async (req, res) => {
   try {
-    console.log(req.body)
-    const { medicine, dosage } = req.body;
-    const { patientId } = req.params; 
-    const prescription = new Prescription({
-      patientId,
-      medicine,
-      dosage,
-    });
+    console.log(req.body);
+    const { medicines, dosages } = req.body;
+    const { patientId } = req.params;
 
-    await prescription.save();
-    console.log('====================================');
-    console.log(prescription);
-    console.log('====================================');
+    if (medicines.length !== dosages.length) {
+      return res.status(400).json({
+        error: "Some error occured. Please refresh the page and try again",
+      });
+    }
+
+    for (let i = 0; i < medicines.length; i++) {
+      const prescription = new Prescription({
+        patientId,
+        medicine: medicines[i],
+        dosage: dosages[i],
+      });
+
+      await prescription.save();
+    }
+
+    console.log("====================================");
+    console.log("====================================");
     res.status(201).json({ message: "Prescription created successfully" });
   } catch (err) {
-    console.log('====================================');
+    console.log("====================================");
     console.log(err);
-    console.log('====================================');
+    console.log("====================================");
     res.status(400).json({ error: err.message });
   }
 };
@@ -78,7 +87,6 @@ export const getPrescriptionByUserId = async (req, res) => {
   }
 };
 
-
 export const createPrescriptionFromImage = async (req, res) => {
   try {
     const { patientId } = req.params;
@@ -86,7 +94,9 @@ export const createPrescriptionFromImage = async (req, res) => {
     const imageUrl = await uploadImageToFirebase(imageFile);
     const extractedData = await generate(imageFile, "prescription");
     if (!extractedData || extractedData.length === 0) {
-      return res.status(400).json({ message: "No medicines found in the image." });
+      return res
+        .status(400)
+        .json({ message: "No medicines found in the image." });
     }
     for (const item of extractedData) {
       const newPrescription = new Prescription({
@@ -102,7 +112,6 @@ export const createPrescriptionFromImage = async (req, res) => {
     res.status(201).json({
       message: "Prescription(s) created successfully",
     });
-
   } catch (error) {
     res.status(500).json({ message: "Error processing image", error });
   }
