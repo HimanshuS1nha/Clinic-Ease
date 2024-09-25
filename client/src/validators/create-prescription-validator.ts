@@ -5,14 +5,12 @@ export const createPrescriptionValidator = z.object({
     .string({ required_error: "Please select a patient" })
     .trim()
     .min(1, { message: "Please select a patient" }),
-  medicine: z
-    .string({ required_error: "Medicine is required" })
-    .trim()
-    .min(1, { message: "Medicine is required" }),
-  dosage: z
-    .string({ required_error: "Dosage is required" })
-    .trim()
-    .min(1, { message: "Dosage is required" }),
+  medicines: z
+    .array(z.string().trim().min(1, { message: "Please fill all the fields" }))
+    .nonempty(),
+  dosages: z
+    .array(z.string().trim().min(1, { message: "Please fill all the fields" }))
+    .nonempty(),
 });
 
 export type createPrescriptionValidatorType = z.infer<

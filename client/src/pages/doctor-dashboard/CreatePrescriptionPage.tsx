@@ -1,9 +1,8 @@
-import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
+import React, { useState } from "react";
 
 import DashboardWrapper from "@/components/dashboard/DashboardWrapper";
 import Title from "@/components/dashboard/Title";
@@ -18,27 +17,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import {
-  createPrescriptionValidatorType,
-  createPrescriptionValidator,
-} from "@/validators/create-prescription-validator";
+import { createPrescriptionValidator } from "@/validators/create-prescription-validator";
+import { ZodError } from "zod";
 
 const CreatePrescriptionPage = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-    getValues,
-    setValue,
-  } = useForm<createPrescriptionValidatorType>({
-    defaultValues: {
-      dosage: "",
-      medicine: "",
-      patientId: "",
-    },
-    resolver: zodResolver(createPrescriptionValidator),
-  });
+  const [patientId, setPatientId] = useState("");
+  const [medicines, setMedicines] = useState<string[]>([]);
+  const [dosages, setDosages] = useState<string[]>([]);
+  const [numberOfMedicines, setNumberOfMedicines] = useState(1);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["get-all-patients"],
@@ -59,32 +45,85 @@ const CreatePrescriptionPage = () => {
     }
   }
 
+  const handleChangeMedicines = (index: number, value: string) => {
+    if (medicines[index]) {
+      const newMedicines = medicines.map((item, i) => {
+        if (index === i) {
+          return value;
+        } else {
+          return item;
+        }
+      });
+
+      setMedicines(newMedicines);
+    } else {
+      const newMedicines = [...medicines, value];
+
+      setMedicines(newMedicines);
+    }
+  };
+
+  const handleChangeDosages = (index: number, value: string) => {
+    if (dosages[index]) {
+      const newDosages = dosages.map((item, i) => {
+        if (index === i) {
+          return value;
+        } else {
+          return item;
+        }
+      });
+
+      setDosages(newDosages);
+    } else {
+      const newDosages = [...dosages, value];
+
+      setDosages(newDosages);
+    }
+  };
+
   const { mutate: handleCreatePrescription, isPending } = useMutation({
     mutationKey: ["create-prescription"],
-    mutationFn: async (values: createPrescriptionValidatorType) => {
+    mutationFn: async () => {
+      const parsedData = await createPrescriptionValidator.parseAsync({
+        dosages,
+        medicines,
+        patientId,
+      });
+
+      if (medicines.length !== dosages.length) {
+        throw new Error(
+          "Some error occured. Please refresh the page and try again"
+        );
+      }
+
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/prescription/create/${
-          values.patientId
+          parsedData.patientId
         }`,
         {
-          dosage: values.dosage,
-          medicine: values.medicine,
-          patientId: values.patientId,
+          dosages: parsedData.dosages,
+          medicines: parsedData.medicines,
         },
         { withCredentials: true }
       );
 
       return data as { message: string };
+      return { message: "YO" };
     },
     onSuccess: (data) => {
       toast.success(data.message);
-      reset();
+      setPatientId("");
+      setMedicines([]);
+      setDosages([]);
+      setNumberOfMedicines(1);
     },
     onError: (error) => {
-      if (error instanceof AxiosError && error.response?.data.message) {
+      if (error instanceof ZodError) {
+        toast.error(error.errors[0].message);
+      } else if (error instanceof AxiosError && error.response?.data.message) {
         toast.error(error.response.data.error);
       } else {
-        toast.error("Some error occured. Please try again later!");
+        toast.error(error.message);
       }
     },
   });
@@ -99,13 +138,16 @@ const CreatePrescriptionPage = () => {
       ) : (
         <form
           className="flex flex-col gap-y-6"
-          onSubmit={handleSubmit((data) => handleCreatePrescription(data))}
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleCreatePrescription();
+          }}
         >
           <div className="flex flex-col gap-y-3">
             <Label className="ml-1.5">Patient</Label>
             <Select
-              defaultValue={getValues("patientId")}
-              onValueChange={(value) => setValue("patientId", value)}
+              value={patientId}
+              onValueChange={(value) => setPatientId(value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select a patient" />
@@ -120,43 +162,63 @@ const CreatePrescriptionPage = () => {
                 })}
               </SelectContent>
             </Select>
-            {errors.patientId && (
-              <p className="text-rose-500 text-sm">
-                {errors.patientId.message}
-              </p>
-            )}
           </div>
-          <div className="flex flex-col gap-y-3">
-            <Label className="ml-1.5" htmlFor="medicine">
-              Medicine
-            </Label>
-            <Input
-              placeholder="Enter medicine"
-              id="medicine"
-              type="text"
-              {...register("medicine", { required: true })}
-            />
-            {errors.medicine && (
-              <p className="text-rose-500 text-sm">{errors.medicine.message}</p>
-            )}
+
+          {Array.from({ length: numberOfMedicines }, (_, i) => i).map(
+            (_, i) => {
+              return (
+                <React.Fragment key={i}>
+                  <div className="flex flex-col gap-y-3">
+                    <Label className="ml-1.5" htmlFor={`medicine${i}`}>
+                      Medicine {i + 1}
+                    </Label>
+                    <Input
+                      placeholder="Enter medicine"
+                      id={`medicine${i}`}
+                      type="text"
+                      value={medicines[i] || ""}
+                      onChange={(e) => handleChangeMedicines(i, e.target.value)}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-y-3">
+                    <Label className="ml-1.5" htmlFor={`dosage${i}`}>
+                      Dosage {i + 1}
+                    </Label>
+                    <Input
+                      placeholder="Enter dosage"
+                      id={`dosage${i}`}
+                      type="text"
+                      value={dosages[i] || ""}
+                      onChange={(e) => handleChangeDosages(i, e.target.value)}
+                    />
+                  </div>
+                </React.Fragment>
+              );
+            }
+          )}
+
+          <div className="flex gap-x-4 items-center">
+            <Button
+              type="button"
+              className="self-start mt-2"
+              onClick={() => setNumberOfMedicines((prev) => prev + 1)}
+            >
+              Add one more medicine
+            </Button>
+            <Button
+              type="button"
+              variant={"destructive"}
+              className="self-start mt-2"
+              onClick={() => {
+                if (numberOfMedicines !== 1) {
+                  setNumberOfMedicines((prev) => prev - 1);
+                }
+              }}
+              disabled={numberOfMedicines === 1}
+            >
+              Remove an entry
+            </Button>
           </div>
-          <div className="flex flex-col gap-y-3">
-            <Label className="ml-1.5" htmlFor="medicine">
-              Dosage
-            </Label>
-            <Input
-              placeholder="Enter dosage"
-              id="dosage"
-              type="text"
-              {...register("dosage", { required: true })}
-            />
-            {errors.dosage && (
-              <p className="text-rose-500 text-sm">{errors.dosage.message}</p>
-            )}
-          </div>
-          <Button type="button" className="self-start mt-2">
-            Add one more medicine
-          </Button>
 
           <Button type="submit" disabled={isPending}>
             {isPending ? "Please wait..." : "Create"}
