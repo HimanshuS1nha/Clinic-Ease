@@ -8,11 +8,11 @@ import mongoose from "mongoose";
 
 export const createMedicalTest = async (req, res) => {
   try {
-    const {id} = req.params
-    const {  doctor, labName, testName, testDate, result } = req.body;
+    const { id } = req.params;
+    const { doctor, labName, testName, testDate, result } = req.body;
     const doctorObjectId = new mongoose.Types.ObjectId(doctor);
     const test = new MedicalTest({
-      doctor:doctorObjectId,
+      doctor: doctorObjectId,
       labName,
       patient: id,
       result,
@@ -36,7 +36,6 @@ export const getMedicalTestByPatient = async (req, res) => {
   }
 };
 
-
 export const getMedicalTestsByUserId = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -52,9 +51,8 @@ export const getMedicalTestsByUserId = async (req, res) => {
 
     for await (const patient of patients) {
       const dbTests = await MedicalTest.find({
-        user: patient._id,
+        patient: patient._id,
       });
-
       if (dbTests.length !== 0) {
         for await (const test of dbTests) {
           const doctor = await Doctor.findOne({ _id: test.doctor });
@@ -91,12 +89,12 @@ export const createTestRecordByImage = async (req, res) => {
     }
     for (const item of extractedData) {
       const newMedicalTest = new MedicalTest({
-        patient: id, 
+        patient: id,
         testDate: item.testDate,
         testName: item.testName,
         result: item.result,
         labName: item.labName,
-        imageUrl, 
+        imageUrl,
       });
 
       await newMedicalTest.save();
@@ -110,4 +108,3 @@ export const createTestRecordByImage = async (req, res) => {
     res.status(500).json({ message: "Error processing image", error });
   }
 };
-
