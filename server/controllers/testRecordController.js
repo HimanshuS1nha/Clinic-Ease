@@ -63,7 +63,6 @@ export const getMedicalTestsByUserId = async (req, res) => {
             patientName: patient.name,
             doctorName: doctor.name,
             labName: test.labName,
-            status: test.status,
             result: test.result,
           });
         }

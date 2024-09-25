@@ -24,11 +24,6 @@ const testRecordSchema = new mongoose.Schema({
   labName: {
     type: String,
   },
-  status: {
-    type: String,
-    enum: ["Pending", "Completed", "In-Progress"],
-    default: "Pending",
-  },
   createdAt: {
     type: Date,
     default: Date.now,
