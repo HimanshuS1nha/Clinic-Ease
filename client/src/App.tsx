@@ -14,6 +14,7 @@ import BookAppointmentPage from "./pages/patient-dashboard/BookAppointmentPage";
 import AppointmentDetailsPage from "./pages/patient-dashboard/AppointmentDetailsPage";
 import TestDetailsPage from "./pages/patient-dashboard/TestDetailsPage";
 import AddPatientPage from "./pages/patient-dashboard/AddPatientPage";
+import PrescriptionDetailsPage from "./pages/patient-dashboard/PrescriptionDetailsPage";
 
 import AdminDashboardPage from "./pages/admin-dashboard/AdminDashboardPage";
 import AddAdminPage from "./pages/admin-dashboard/AddAdminPage";
@@ -30,7 +31,6 @@ import PatientDetailsPage from "./pages/doctor-dashboard/PatientDetailPage";
 
 import { useUser } from "./hooks/useUser";
 import type { UserType } from "types";
-import PrescriptionDetailsPage from "./pages/patient-dashboard/PrescriptionDetailPage";
 
 const App = () => {
   const { setUser } = useUser();

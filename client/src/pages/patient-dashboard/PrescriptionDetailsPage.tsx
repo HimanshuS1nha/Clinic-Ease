@@ -17,66 +17,57 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
-type TestDetails = {
+type PrescriptionDetails = {
   id: string;
   patientName: string;
-  testName: string;
-  testDate: String;
-  result: string;
-  labName: string;
-  status: "Pending" | "Completed" | "In-Progress";
+  medicine: string;
+  dosage: string;
+  createdAt: string; // You can format this as needed
 };
 
-const TestDetailsPage = () => {
-  const [testDetails, setTestDetails] = useState<TestDetails[]>([]);
+const PrescriptionDetailsPage = () => {
+  const [prescriptionDetails, setPrescriptionDetails] = useState<
+    PrescriptionDetails[]
+  >([]);
   const [selectedPatient, setSelectedPatient] = useState("");
 
-  const columns: ColumnDef<TestDetails>[] = [
+  const columns: ColumnDef<PrescriptionDetails>[] = [
     {
       accessorKey: "patientName",
       header: "Patient Name",
     },
     {
-      accessorKey: "testName",
-      header: "Test Name",
+      accessorKey: "medicine",
+      header: "Medicine",
     },
     {
-      accessorKey: "testDate",
-      header: "Date",
-      cell: ({ row }) => {
-        return <p>{row.original.testDate.split("T")[0]}</p>;
-      },
+      accessorKey: "dosage",
+      header: "Dosage",
     },
     {
-      accessorKey: "labName",
-      header: "Lab Name",
-    },
-    {
-      accessorKey: "status",
-      header: "Status",
-    },
-    {
-      accessorKey: "result",
-      header: "Result",
+      accessorKey: "createdAt",
+      header: "Date Prescribed",
+      cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
     },
   ];
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["get-tests"],
+    queryKey: ["get-prescriptions"],
     queryFn: async () => {
       const { data } = await axios.get(
-        `${import.meta.env.VITE_API_URL}/testrecords`,
+        `${import.meta.env.VITE_API_URL}/prescription`,
         { withCredentials: true }
       );
 
-      return data as TestDetails[];
+      return data as PrescriptionDetails[];
     },
   });
+
   if (error) {
     if (error instanceof AxiosError && error.response?.data.error) {
       toast.error(error.response.data.error);
     } else {
-      toast.error("Some error occured. Please try again later!");
+      toast.error("Some error occurred. Please try again later!");
     }
   }
 
@@ -111,13 +102,14 @@ const TestDetailsPage = () => {
   const filterRecords = () => {
     if (selectedPatient === "") {
       if (data) {
-        setTestDetails(data);
+        setPrescriptionDetails(data);
       }
     } else {
       if (data) {
-        setTestDetails(
+        setPrescriptionDetails(
           data.filter(
-            (testDetail) => testDetail.patientName === selectedPatient
+            (prescriptionDetail) =>
+              prescriptionDetail.patientName === selectedPatient
           )
         );
       }
@@ -126,7 +118,7 @@ const TestDetailsPage = () => {
 
   useEffect(() => {
     if (data) {
-      setTestDetails(data);
+      setPrescriptionDetails(data);
     }
   }, [data]);
 
@@ -135,16 +127,16 @@ const TestDetailsPage = () => {
   }, [selectedPatient]);
   return (
     <DashboardWrapper>
-      <Title>Test Details</Title>
+      <Title>Prescription Details</Title>
 
-      {patientsLoading ||
-        (isLoading && (
+      {isLoading ||
+        (patientsLoading && (
           <div className="flex w-full h-full items-center justify-center">
             <Loader2 size={50} className="animate-spin" color="green" />
           </div>
         ))}
 
-      {testDetails && (
+      {prescriptionDetails && (
         <div className="flex flex-col gap-y-6">
           <div className="flex gap-x-2">
             <Select
@@ -171,11 +163,11 @@ const TestDetailsPage = () => {
               X
             </Button>
           </div>
-          <DataTable columns={columns} data={testDetails} />
+          <DataTable columns={columns} data={prescriptionDetails} />
         </div>
       )}
     </DashboardWrapper>
   );
 };
 
-export default TestDetailsPage;
+export default PrescriptionDetailsPage;
