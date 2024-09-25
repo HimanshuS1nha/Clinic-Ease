@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import {
   adminSidebarItems,
@@ -21,6 +21,7 @@ import { useUser } from "@/hooks/useUser";
 const Sidebar = () => {
   const { user, setUser } = useUser();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const { mutate: handleLogout } = useMutation({
     mutationKey: ["logout"],
@@ -54,7 +55,11 @@ const Sidebar = () => {
           return (
             <Link
               to={`/dashboard/patient/${item.url}`}
-              className="font-semibold hover:text-emerald-600 delay-100 transition-all"
+              className={`font-semibold ${
+                pathname.split("/")[pathname.split("/").length - 1] === item.url
+                  ? "text-emerald-600"
+                  : "hover:text-emerald-600"
+              } delay-100 transition-all`}
               key={item.title}
             >
               {item.title}
@@ -67,7 +72,11 @@ const Sidebar = () => {
           return (
             <Link
               to={`/dashboard/admin/${item.url}`}
-              className="font-semibold hover:text-emerald-600 delay-100 transition-all"
+              className={`font-semibold ${
+                pathname.split("/")[pathname.split("/").length - 1] === item.url
+                  ? "text-emerald-600"
+                  : "hover:text-emerald-600"
+              } delay-100 transition-all`}
               key={item.title}
             >
               {item.title}
@@ -80,7 +89,11 @@ const Sidebar = () => {
           return (
             <Link
               to={`/dashboard/doctor/${item.url}`}
-              className="font-semibold hover:text-emerald-600 delay-100 transition-all"
+              className={`font-semibold ${
+                pathname.split("/")[pathname.split("/").length - 1] === item.url
+                  ? "text-emerald-600"
+                  : "hover:text-emerald-600"
+              } delay-100 transition-all`}
               key={item.title}
             >
               {item.title}

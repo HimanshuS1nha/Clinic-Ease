@@ -63,7 +63,9 @@ const CreatePrescriptionPage = () => {
     mutationKey: ["create-prescription"],
     mutationFn: async (values: createPrescriptionValidatorType) => {
       const { data } = await axios.post(
-        `${import.meta.env.VITE_API_URL}/prescription/create/${values.patientId}`,
+        `${import.meta.env.VITE_API_URL}/prescription/create/${
+          values.patientId
+        }`,
         {
           dosage: values.dosage,
           medicine: values.medicine,
@@ -152,10 +154,7 @@ const CreatePrescriptionPage = () => {
               <p className="text-rose-500 text-sm">{errors.dosage.message}</p>
             )}
           </div>
-          <Button
-            type="button"
-            className="self-start mt-2"
-          >
+          <Button type="button" className="self-start mt-2">
             Add one more medicine
           </Button>
 

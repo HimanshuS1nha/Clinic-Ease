@@ -38,7 +38,7 @@ export const adminSidebarItems = [
 
 export const doctorSidebarItems = [
   {
-    title: "Get Apointments",
+    title: "Get Appointments",
     url: "get-appointments",
   },
   {
