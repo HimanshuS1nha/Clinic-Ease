@@ -23,8 +23,8 @@ import DoctorDetailsPage from "./pages/admin-dashboard/DoctorDetailsPage";
 
 import DoctorDashboardPage from "./pages/doctor-dashboard/DoctorDashboardPage";
 import CreatePrescriptionPage from "./pages/doctor-dashboard/CreatePrescriptionPage";
-import CreateMedicalTest from "./pages/doctor-dashboard/CreateMedicalTest";
-import GetAppointment from "./pages/doctor-dashboard/GetAppointments";
+import CreateMedicalTestPage from "./pages/doctor-dashboard/CreateMedicalTestPage";
+import GetAppointmentsPage from "./pages/doctor-dashboard/GetAppointmentsPage";
 import UploadTestRecordPage from "./pages/doctor-dashboard/UploadTestRecord";
 import UploadPrescriptionPage from "./pages/doctor-dashboard/UploadPrescription";
 import PatientDetailsPage from "./pages/doctor-dashboard/PatientDetailPage";
@@ -98,7 +98,7 @@ const App = () => {
       <Route path="/dashboard/doctor" Component={DoctorDashboardPage} />
       <Route
         path="/dashboard/doctor/get-appointments"
-        Component={GetAppointment}
+        Component={GetAppointmentsPage}
       />
       <Route
         path="/dashboard/doctor/create-prescription"
@@ -110,7 +110,7 @@ const App = () => {
       />
       <Route
         path="/dashboard/doctor/create-medical-test"
-        Component={CreateMedicalTest}
+        Component={CreateMedicalTestPage}
       />
       <Route
         path="/dashboard/doctor/patient/:patientId"

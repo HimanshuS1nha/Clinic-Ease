@@ -24,7 +24,6 @@ type TestDetails = {
   testDate: String;
   result: string;
   labName: string;
-  status: "Pending" | "Completed" | "In-Progress";
 };
 
 const TestDetailsPage = () => {
@@ -50,10 +49,6 @@ const TestDetailsPage = () => {
     {
       accessorKey: "labName",
       header: "Lab Name",
-    },
-    {
-      accessorKey: "status",
-      header: "Status",
     },
     {
       accessorKey: "result",

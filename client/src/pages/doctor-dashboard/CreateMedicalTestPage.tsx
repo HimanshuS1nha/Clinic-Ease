@@ -4,7 +4,7 @@ import axios, { AxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 import DashboardWrapper from "@/components/dashboard/DashboardWrapper";
 import Title from "@/components/dashboard/Title";
@@ -26,10 +26,13 @@ import {
 } from "@/validators/create-medical-test-validator";
 import { useUser } from "@/hooks/useUser";
 
-const CreateMedicalTest = () => {
+const CreateMedicalTestPage = () => {
   const { user } = useUser();
 
   const [date, setDate] = useState<Date>();
+  const [numberOfTests, setNumberOfTests] = useState(1);
+  const [testNames, setTestNames] = useState<string[]>([]);
+  const [testResults, setTestResults] = useState<string[]>([]);
 
   const {
     register,
@@ -66,6 +69,40 @@ const CreateMedicalTest = () => {
       toast.error("Some error occured. Please try again later!");
     }
   }
+
+  const handleChangeTestNames = (index: number, value: string) => {
+    if (testNames[index]) {
+      const newTestNames = testNames.map((item, i) => {
+        if (i === index) {
+          return value;
+        } else {
+          return item;
+        }
+      });
+
+      setTestNames(newTestNames);
+    } else {
+      const newTestNames = [...testNames, value];
+      setTestNames(newTestNames);
+    }
+  };
+
+  const handleChangeTestResults = (index: number, value: string) => {
+    if (testResults[index]) {
+      const newTestResults = testResults.map((item, i) => {
+        if (i === index) {
+          return value;
+        } else {
+          return item;
+        }
+      });
+
+      setTestResults(newTestResults);
+    } else {
+      const newTestResults = [...testResults, value];
+      setTestResults(newTestResults);
+    }
+  };
 
   const { mutate: handleCreateMedicalTest, isPending } = useMutation({
     mutationKey: ["create-medical-test"],
@@ -138,7 +175,7 @@ const CreateMedicalTest = () => {
               </p>
             )}
           </div>
-          
+
           <div className="flex flex-col gap-y-3">
             <Label className="ml-1.5" htmlFor="testDate">
               Test Date
@@ -159,42 +196,60 @@ const CreateMedicalTest = () => {
               <p className="text-rose-500 text-sm">{errors.labName.message}</p>
             )}
           </div>
-          <div className="flex flex-col gap-y-3">
-            <Label className="ml-1.5" htmlFor="testName">
-              Test Name
-            </Label>
-            <Input
-              placeholder="Enter test name"
-              id="testName"
-              type="text"
-              {...register("testName", { required: true })}
-            />
-            {errors.testName && (
-              <p className="text-rose-500 text-sm">{errors.testName.message}</p>
-            )}
-          </div>
-          <div className="flex flex-col gap-y-3">
-            <Label className="ml-1.5" htmlFor="result">
-              Result
-            </Label>
-            <Input
-              placeholder="Enter result"
-              id="result"
-              type="text"
-              {...register("result", { required: true })}
-            />
-            {errors.result && (
-              <p className="text-rose-500 text-sm">{errors.result.message}</p>
-            )}
-          </div>
 
-          <Button
-            type="button"
-            className="self-start mt-2"
-          >
-            Add one more test
-          </Button>
+          {Array.from({ length: numberOfTests }, (_, i) => i).map((_, i) => {
+            return (
+              <React.Fragment key={i}>
+                <div className="flex flex-col gap-y-3">
+                  <Label className="ml-1.5" htmlFor={`testName${i}`}>
+                    Test {i} Name
+                  </Label>
+                  <Input
+                    placeholder="Enter test name"
+                    id={`testName${i}`}
+                    type="text"
+                    value={testNames[i] || ""}
+                    onChange={(e) => handleChangeTestNames(i, e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-y-3">
+                  <Label className="ml-1.5" htmlFor={`result${i}`}>
+                    Result of Test {i}
+                  </Label>
+                  <Input
+                    placeholder="Enter result"
+                    id={`result${i}`}
+                    type="text"
+                    value={testResults[i] || ""}
+                    onChange={(e) => handleChangeTestResults(i, e.target.value)}
+                  />
+                </div>
+              </React.Fragment>
+            );
+          })}
 
+          <div className="flex gap-x-4 items-center">
+            <Button
+              type="button"
+              className="self-start mt-2"
+              onClick={() => setNumberOfTests((prev) => prev + 1)}
+            >
+              Add one more test
+            </Button>
+            <Button
+              variant={"destructive"}
+              type="button"
+              className="self-start mt-2"
+              disabled={numberOfTests === 1}
+              onClick={() => {
+                if (numberOfTests !== 1) {
+                  setNumberOfTests((prev) => prev - 1);
+                }
+              }}
+            >
+              Remove an entry
+            </Button>
+          </div>
 
           <Button type="submit" disabled={isPending}>
             {isPending ? "Please wait..." : "Create"}
@@ -205,4 +260,4 @@ const CreateMedicalTest = () => {
   );
 };
 
-export default CreateMedicalTest;
+export default CreateMedicalTestPage;

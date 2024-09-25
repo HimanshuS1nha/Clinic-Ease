@@ -8,6 +8,7 @@ import Title from "@/components/dashboard/Title";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+
 type AppointmentDetails = {
   id: string;
   doctorName: string;
@@ -25,7 +26,11 @@ const isTodayAppointment = (dateString: string, status: string) => {
   today.setHours(0, 0, 0, 0);
   const endToday = new Date();
   endToday.setHours(23, 59, 59, 59);
-  return appointmentDate >= today && appointmentDate<=endToday && status !== "Completed";
+  return (
+    appointmentDate >= today &&
+    appointmentDate <= endToday &&
+    status !== "Completed"
+  );
 };
 
 const formatDate = (dateString: string) => {
@@ -36,7 +41,7 @@ const formatDate = (dateString: string) => {
   return `${day}-${month}-${year}`;
 };
 
-const AppointmentDetailsPage = () => {
+const GetAppointmentsPage = () => {
   const navigate = useNavigate();
   const {
     data: appointments,
@@ -170,4 +175,4 @@ const AppointmentDetailsPage = () => {
   );
 };
 
-export default AppointmentDetailsPage;
+export default GetAppointmentsPage;
