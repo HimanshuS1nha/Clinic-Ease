@@ -1,10 +1,9 @@
-import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import React, { useState } from "react";
+import { ZodError } from "zod";
 
 import DashboardWrapper from "@/components/dashboard/DashboardWrapper";
 import Title from "@/components/dashboard/Title";
@@ -20,10 +19,7 @@ import {
 } from "@/components/ui/select";
 import { DatePicker } from "@/components/ui/date-picker";
 
-import {
-  createMedicalTestValidatorType,
-  createMedicalTestValidator,
-} from "@/validators/create-medical-test-validator";
+import { createMedicalTestValidator } from "@/validators/create-medical-test-validator";
 import { useUser } from "@/hooks/useUser";
 
 const CreateMedicalTestPage = () => {
@@ -33,23 +29,8 @@ const CreateMedicalTestPage = () => {
   const [numberOfTests, setNumberOfTests] = useState(1);
   const [testNames, setTestNames] = useState<string[]>([]);
   const [testResults, setTestResults] = useState<string[]>([]);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-    getValues,
-    setValue,
-  } = useForm<createMedicalTestValidatorType>({
-    defaultValues: {
-      patientId: "",
-      testName: "",
-      result: "",
-      labName: "",
-    },
-    resolver: zodResolver(createMedicalTestValidator),
-  });
+  const [labName, setLabName] = useState("");
+  const [patientId, setPatientId] = useState("");
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["get-all-patients"],
@@ -106,16 +87,25 @@ const CreateMedicalTestPage = () => {
 
   const { mutate: handleCreateMedicalTest, isPending } = useMutation({
     mutationKey: ["create-medical-test"],
-    mutationFn: async (values: createMedicalTestValidatorType) => {
+    mutationFn: async () => {
+      const parsedData = await createMedicalTestValidator.parseAsync({
+        testNames,
+        testResults,
+        labName,
+        patientId,
+      });
+
       const { data } = await axios.post(
-        `${import.meta.env.VITE_API_URL}/testrecord/create/${values.patientId}`,
+        `${import.meta.env.VITE_API_URL}/testrecord/create/${
+          parsedData.patientId
+        }`,
         {
-          patientId: values.patientId,
+          patientId: parsedData.patientId,
           doctor: user?._id,
-          labName: values.labName,
-          testName: values.testName,
+          labName: parsedData.labName,
+          testNames: parsedData.testNames,
           testDate: date,
-          result: values.result,
+          testResults: parsedData.testResults,
         },
         { withCredentials: true }
       );
@@ -124,14 +114,20 @@ const CreateMedicalTestPage = () => {
     },
     onSuccess: (data) => {
       toast.success(data.message);
-      reset();
+      setLabName("");
+      setPatientId("");
+      setNumberOfTests(1);
+      setTestNames([]);
+      setTestResults([]);
+      setDate(undefined);
     },
     onError: (error) => {
-      console.log(error);
-      if (error instanceof AxiosError && error.response?.data.message) {
+      if (error instanceof ZodError) {
+        toast.error(error.errors[0].message);
+      } else if (error instanceof AxiosError && error.response?.data.message) {
         toast.error(error.response.data.message);
       } else {
-        toast.error("Some error occured. Please try again later!");
+        toast.error(error.message);
       }
     },
   });
@@ -146,14 +142,17 @@ const CreateMedicalTestPage = () => {
       ) : (
         <form
           className="flex flex-col gap-y-6"
-          onSubmit={handleSubmit((data) => handleCreateMedicalTest(data))}
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleCreateMedicalTest();
+          }}
         >
           <div className="flex flex-col gap-y-3">
             <Label className="ml-1.5">Patient</Label>
             {data && (
               <Select
-                defaultValue={getValues("patientId")}
-                onValueChange={(value) => setValue("patientId", value)}
+                value={patientId}
+                onValueChange={(value) => setPatientId(value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select a patient" />
@@ -168,11 +167,6 @@ const CreateMedicalTestPage = () => {
                   })}
                 </SelectContent>
               </Select>
-            )}
-            {errors.patientId && (
-              <p className="text-rose-500 text-sm">
-                {errors.patientId.message}
-              </p>
             )}
           </div>
 
@@ -190,11 +184,9 @@ const CreateMedicalTestPage = () => {
               placeholder="Enter lab name"
               id="labName"
               type="text"
-              {...register("labName", { required: true })}
+              value={labName}
+              onChange={(e) => setLabName(e.target.value)}
             />
-            {errors.labName && (
-              <p className="text-rose-500 text-sm">{errors.labName.message}</p>
-            )}
           </div>
 
           {Array.from({ length: numberOfTests }, (_, i) => i).map((_, i) => {

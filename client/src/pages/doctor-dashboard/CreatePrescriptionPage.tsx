@@ -3,6 +3,7 @@ import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import React, { useState } from "react";
+import { ZodError } from "zod";
 
 import DashboardWrapper from "@/components/dashboard/DashboardWrapper";
 import Title from "@/components/dashboard/Title";
@@ -18,7 +19,6 @@ import {
 } from "@/components/ui/select";
 
 import { createPrescriptionValidator } from "@/validators/create-prescription-validator";
-import { ZodError } from "zod";
 
 const CreatePrescriptionPage = () => {
   const [patientId, setPatientId] = useState("");
