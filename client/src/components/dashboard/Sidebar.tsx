@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useUser } from "@/hooks/useUser";
 
-const Sidebar = () => {
+const Sidebar = ({ show = false }: { show?: boolean }) => {
   const { user, setUser } = useUser();
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -49,7 +49,11 @@ const Sidebar = () => {
     },
   });
   return (
-    <div className="w-[280px] px-8 pt-5 flex flex-col gap-y-6">
+    <div
+      className={`w-[280px] px-8 pt-5 ${
+        show ? "flex" : "hidden"
+      } md:flex flex-col gap-y-6`}
+    >
       {user?.role === "patient" &&
         patientSidebarItems.map((item) => {
           return (
