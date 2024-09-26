@@ -35,7 +35,7 @@ const Sidebar = ({ show = false }: { show?: boolean }) => {
     },
     onSuccess: (data) => {
       toast.success(data.message);
-      navigate(`/login/${user?.role === "doctor" ? "doctor" : "patient"}`, {
+      navigate("/", {
         replace: true,
       });
       setUser(null);
