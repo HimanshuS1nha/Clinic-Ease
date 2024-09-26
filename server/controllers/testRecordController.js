@@ -9,17 +9,21 @@ import mongoose from "mongoose";
 export const createMedicalTest = async (req, res) => {
   try {
     const { id } = req.params;
-    const { doctor, labName, testName, testDate, result } = req.body;
+    const { doctor, labName, testNames, testDate, testResults } = req.body;
     const doctorObjectId = new mongoose.Types.ObjectId(doctor);
-    const test = new MedicalTest({
-      doctor: doctorObjectId,
-      labName,
-      patient: id,
-      result,
-      testDate,
-      testName,
-    });
-    await test.save();
+
+    for (let i = 0; i < testNames.length; i++) {
+      const test = new MedicalTest({
+        doctor: doctorObjectId,
+        labName,
+        patient: id,
+        result: testResults[i],
+        testDate,
+        testName: testNames[i],
+      });
+      await test.save();
+    }
+    
     res.status(201).json({ message: "Medical test created successfully" });
   } catch (err) {
     console.log(err);
