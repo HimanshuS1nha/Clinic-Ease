@@ -121,7 +121,7 @@ const Navbar = () => {
           <>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant={"ghost"} asChild className="hidden lg:block">
+                <Button variant={"ghost"} asChild>
                   <Link to={"/login"}>Login</Link>
                 </Button>
               </DropdownMenuTrigger>
@@ -142,7 +142,7 @@ const Navbar = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button asChild>
+            <Button asChild className="hidden lg:block">
               <Link to={"/signup"}>Signup</Link>
             </Button>
           </>
