@@ -12,6 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import toast from "react-hot-toast";
 
 export function DatePicker({
   date,
@@ -20,8 +21,6 @@ export function DatePicker({
   date?: Date;
   setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
 }) {
-  //   const [date, setDate] = React.useState<Date>();
-
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -40,8 +39,17 @@ export function DatePicker({
         <Calendar
           mode="single"
           selected={date}
-          onSelect={setDate}
+          onSelect={(date) => {
+            if (date?.getDay() === 0) {
+              toast.error(
+                "The clinic is closed on sunday. Please select any other date"
+              );
+            } else {
+              setDate(date);
+            }
+          }}
           initialFocus
+          fromDate={new Date()}
         />
       </PopoverContent>
     </Popover>
