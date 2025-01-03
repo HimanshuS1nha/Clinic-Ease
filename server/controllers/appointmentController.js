@@ -121,8 +121,6 @@ export const getAppointmentsByDoctor = async (req, res) => {
     let appointmentDetails = [];
 
     for await (const appointment of appointments) {
-      
-        // Push formatted appointment details to the array
         appointmentDetails.push({
           id: appointment._id,
           appointmentDate: appointment.appointmentDate,

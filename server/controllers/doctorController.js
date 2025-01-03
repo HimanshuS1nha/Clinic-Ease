@@ -89,3 +89,40 @@ export const getDoctorById = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+// export const addDisabledDates = async (req, res) => {
+//   try {
+//     const { doctorId } = req.params;
+//     const { disabledDates } = req.body;
+//     if (!disabledDates || disabledDates.length === 0) {
+//       return res.status(400).json({ message: 'No disabled dates provided' });
+//     }
+//     let doctor = await Doctor.findById(doctorId);
+
+//     if (!doctor) {
+//       return res.status(404).json({ message: 'Doctor not found' });
+//     }
+
+//     doctor.disabledDates = [...doctor.disabledDates, ...disabledDates];
+//     await doctor.save();
+
+//     res.status(200).json({ message: 'Disabled dates added successfully', doctor });
+//   } catch (error) {
+//     res.status(500).json({ message: 'Server error', error });
+//   }
+// };
+
+// export const getDisabledDates = async (req, res) => {
+//   try {
+//     const { doctorId } = req.params;
+//     const doctor = await Doctor.findById(doctorId);
+
+//     if (!doctor) {
+//       return res.status(404).json({ message: 'Doctor not found' });
+//     }
+
+//     res.status(200).json({ disabledDates: doctor.disabledDates });
+//   } catch (error) {
+//     res.status(500).json({ message: 'Server error', error });
+//   }
+// };

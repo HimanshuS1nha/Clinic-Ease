@@ -26,13 +26,8 @@ export const createPrescription = async (req, res) => {
       await prescription.save();
     }
 
-    console.log("====================================");
-    console.log("====================================");
     res.status(201).json({ message: "Prescription created successfully" });
   } catch (err) {
-    console.log("====================================");
-    console.log(err);
-    console.log("====================================");
     res.status(400).json({ error: err.message });
   }
 };
