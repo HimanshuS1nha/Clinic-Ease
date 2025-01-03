@@ -39,7 +39,7 @@ const Navbar = () => {
     },
     onSuccess: (data) => {
       toast.success(data.message);
-      navigate(`/login/${user?.role}`, { replace: true });
+      navigate("/", { replace: true });
       setUser(null);
     },
     onError: (error) => {

@@ -23,7 +23,7 @@ const Navbar = () => {
 
         <Sheet>
           <SheetTrigger>
-            <MdMenu size={24} />
+            <MdMenu size={24} className="block md:hidden" />
           </SheetTrigger>
           <SheetContent>
             <Sidebar show />
